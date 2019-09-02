@@ -92,7 +92,7 @@ mod1 = Alt key; mod4 = Win key ($mod)
 dunst (notification)
 
 ![i3-desktop](screenshots/dmenu_desktop.png)
-dmenu
+dmenu desktop
 
 ![i3-desktop](screenshots/dmenu.png)
 dmenu
