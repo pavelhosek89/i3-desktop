@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+df -h | egrep -w '/|/home|/mnt/data' | sed -e 's/  \+/ /g' | cut -d' ' -f4,6

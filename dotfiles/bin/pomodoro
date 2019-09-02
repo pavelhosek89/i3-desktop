@@ -1,0 +1,271 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+# Set magic variables for current file & dir
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file})"
+__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+readonly RENDEZVOUS=/dev/shm/pomodoro
+HOURS=7         # (45 min * 8) + (6 * 5) + 30
+POMODOROS=8     # 7h work
+POMODORO=2700   # 45 min
+SHORT=300       # 5 min
+LONG=1800       # 30 min
+TYPE="w"        # w - working, s - short, l - long
+TIME=$(($POMODORO/60))   # time to end pomodoro or short break or long break
+declare -a SHM_POMODORO
+
+finish() {
+    if ps -p ${SHM_POMODORO[1]} > /dev/null && [[ ${SHM_POMODORO[1]} != $$ ]]; then
+        unset $SHM_POMODORO
+    elif [[ ${SHM_POMODORO[0]} = "pause" ]]; then
+        unset $SHM_POMODORO
+    else
+        unset $SHM_POMODORO
+        rm -f $RENDEZVOUS
+    fi
+    exit 0
+}
+
+pcontinue() {
+    if ps -p ${SHM_POMODORO[1]} > /dev/null && [[ ${SHM_POMODORO[1]} != $$ ]]
+    then
+        notify_send "Pomodoro" "Is running !"
+        exit 1
+    else
+        read -r -a SHM_POMODORO < $RENDEZVOUS
+        SHM_POMODORO[0]="run"
+        SHM_POMODORO[1]=$$
+        echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+        POMODOROS=${SHM_POMODORO[3]}
+        POMODORO=${SHM_POMODORO[4]}
+        SHORT=${SHM_POMODORO[5]}
+        LONG=${SHM_POMODORO[6]}
+        pomodoro "$((${SHM_POMODORO[2]}+1))"
+    fi
+}
+
+ppause() {
+    kill -9 ${SHM_POMODORO[1]}
+    SHM_POMODORO[0]="pause"
+    echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+    unset $SHM_POMODORO
+    exit 0
+}
+
+pstart() {
+    if ps -p ${SHM_POMODORO[1]} > /dev/null && [[ ${SHM_POMODORO[1]} != $$ ]]
+    then
+        notify_send "Pomodoro" "Is running !"
+        exit 1
+    else
+        pomodoro 1
+    fi
+}
+
+pstatus() {
+    if [[ ${SHM_POMODORO[1]} == $$ ]]
+    then
+        notify_send "Pomodoro" "Not running !"
+    else
+        if [[ ${SHM_POMODORO[7]} == "w" ]]
+        then
+            notify_send "Pomodoro n°$((${SHM_POMODORO[2]}+1)) !" "Remaning time ${SHM_POMODORO[8]} min !"
+        elif [[ ${SHM_POMODORO[7]} == "s" ]]
+        then
+            notify_send "Break time n°$((${SHM_POMODORO[2]})) !" "Remaning time ${SHM_POMODORO[8]} min !"
+        else
+            notify_send "Long break time !" "Remaning time ${SHM_POMODORO[8]} min !"
+        fi
+    fi
+    exit 0
+}
+
+pstop() {
+    kill -9 ${SHM_POMODORO[1]}
+    unset $SHM_POMODORO
+    rm -f $RENDEZVOUS
+    exit 0
+}
+
+break_sleep() {
+    MPC_STATUS="stop"
+    # If mpd is playing
+    if mpc status | grep playing > /dev/null
+    then
+        mpc pause
+        MPC_STATUS="play"
+    fi
+    if [[ $1 == $SHORT ]]
+    then
+        SHM_POMODORO[7]="s"
+    else
+        SHM_POMODORO[7]="l"
+    fi
+    tmpvar=$(($1/60))
+    for (( t=$tmpvar; t>=1; t-- ))
+    do
+        SHM_POMODORO[8]=$t
+        echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+        sleep 60
+    done
+    if [[ $MPC_STATUS == "play" ]]
+    then
+        mpc play
+    fi
+}
+
+pomodoro_sleep() {
+    SHM_POMODORO[7]="w"
+    tmpvar=$(($1/60))
+    for (( t=$tmpvar; t>=1; t-- ))
+    do
+        SHM_POMODORO[8]=$t
+        echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+        sleep 60
+    done
+
+    SHM_POMODORO[2]=$2
+    echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+}
+
+notify_send() {
+    notify-send -u critical "$1" "$2"
+}
+
+pomodoro() {
+    # 4 cicles of pomodoros = long break
+    pomodoro_cicle=0
+    for (( c=$1; c<=$POMODOROS; c++ )) # c = pomodoro count
+    do
+        pomodoro_cicle=$(($pomodoro_cicle+1))
+        notify_send "Pomodoro n°$c !" "Working !"
+        #notify-send "Pomodoro Counter" "Time for Pomodoro #$c, work!"
+        pomodoro_sleep $POMODORO $c
+        if [[ $c != $POMODOROS ]]; then
+            if [[ "$pomodoro_cicle" = 4 ]]; then
+                notify_send "Good job, long break time !" ""
+                pomodoro_cicle=0
+                break_sleep $LONG # long break of 15 min
+            else
+                notify_send "Break time n°$c!" ""
+                break_sleep $SHORT # short break of 5 min 
+            fi
+        fi
+    done
+    notify_send "Pomodoro" "No more pomodoros left! You worked for 7 hours."
+    #notify-send "Pomodoro Counter" "No more pomodoros left!"
+}
+
+#########################
+# The command line help #
+#########################
+display_help() {
+    echo "Usage: $0 [option...] {continue|pause|start|status|stop}" >&2
+    echo
+    echo "   -h                     print this help message"
+    echo
+    echo "   -c [count]             set number of pomodoros [8x]"
+    echo "   -l [min]               set time for long pause [15 min]"
+    echo "   -p [min]               set time for pomodoro [45 min]"
+    echo "   -s [min]               set time for short pause [5 min]"
+    echo
+    # echo some stuff here for the -a or --add-options
+    exit 1
+}
+
+# START SCRIPT
+
+################################
+# Check if parameters options  #
+# are given on the commandline #
+################################
+while getopts ":c:l:p:s:h" opt; do
+    case $opt in
+        h)
+            display_help  # Call your function
+            exit 0
+            ;;
+        c)
+            POMODOROS=$OPTARG
+            ;;
+        l)
+            LONG=$(($OPTARG*60))
+            ;;
+        p)
+            POMODORO=$(($OPTARG*60))
+            ;;
+        s)
+            SHORT=$(($OPTARG*60))
+            ;;
+
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+#######################
+# Read or create file #
+# for shared memory   #
+#######################
+if [[ -f $RENDEZVOUS ]]; then
+    read -r -a SHM_POMODORO < $RENDEZVOUS
+else
+    SHM_POMODORO[0]="run"
+    SHM_POMODORO[1]=$$
+    SHM_POMODORO[2]=0
+    SHM_POMODORO[3]=$POMODOROS
+    SHM_POMODORO[4]=$POMODORO
+    SHM_POMODORO[5]=$SHORT
+    SHM_POMODORO[6]=$LONG
+    SHM_POMODORO[7]=w
+    SHM_POMODORO[8]=$(($POMODORO/60))
+    echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
+fi
+
+trap finish EXIT INT
+
+######################
+# Check if parameter #
+# is set too execute #
+######################
+if [[ $# -eq 0 ]] ; then
+    display_help
+    exit 1
+fi
+
+case "$1" in
+    continue)
+        pcontinue # calling function pcontinue()
+        ;;
+    pause)
+        ppause  # calling function ppause()
+        ;;
+    start)
+        pstart # calling function pstart()
+        ;;
+    status)
+        pstatus # calling function pstatus()
+        ;;
+    stop)
+        pstop # calling function pstop()
+        ;;
+    *)
+        # echo "Usage: $0 {continue|pause|start|status|stop}" >&2
+        display_help
+        exit 1
+        ;;
+esac
