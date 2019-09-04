@@ -291,7 +291,7 @@ client.background               #FFFFFF
 bar {
     font pango:DejaVu Sans Mono, Awasome 10
     status_command i3status
-    position bottom
+    position top
     strip_workspace_numbers yes
     separator_symbol "  /  "
     tray_output none
