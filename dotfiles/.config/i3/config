@@ -289,7 +289,6 @@ client.background               #FFFFFF
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    output primary
     font pango:DejaVu Sans Mono, Awasome 10
     status_command i3status
     position bottom
