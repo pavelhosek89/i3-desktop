@@ -47,11 +47,11 @@ bindsym $mod+Shift+q kill
 bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -b -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '
+bindsym $mod+d exec dmenu_run -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '"
+bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '"
 
 # change focus
 bindsym $mod+j focus left
@@ -235,7 +235,7 @@ set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h)
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -b -i -p " Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '#93A1A1' -nb '#002B36' -sb '#dc322f' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
+    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p " Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '#93A1A1' -nb '#002B36' -sb '#dc322f' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
     #bindsym e exec --no-startup-id i3-msg exit, mode "default"
     bindsym s exec --no-startup-id "$(lock_system)" && systemctl suspend, mode "default"
     bindsym h exec --no-startup-id "$(lock_system)" && systemctl hibernate, mode "default"
