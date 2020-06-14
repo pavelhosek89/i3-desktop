@@ -27,7 +27,6 @@ Plugin 'tpope/vim-surround'
 Plugin 'w0rp/ale'
 Plugin 'tpope/vim-fugitive'
 Plugin 'triglav/vim-visual-increment'
-Plugin 'micha/vim-colors-solarized'
 
 call vundle#end()
 
@@ -54,8 +53,3 @@ let g:lightline = {
 
 """ VISUAL-INCREMENT
 set nrformats=alpha,octal,hex
-
-""" VIM-COLORS-SOLARIZED
-syntax enable
-set background=dark
-colorscheme solarized

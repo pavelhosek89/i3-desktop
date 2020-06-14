@@ -1,0 +1,92 @@
+general {
+    output_format = "i3bar"
+    colors = false
+    markup = pango
+    color_good = "#819400"
+    color_degraded = "#2587cc"
+    color_bad = "#d12f2c"
+}
+
+#order += "disk /"
+#order += "disk /home"
+#order += "disk /mnt/data"
+order += "ethernet _first_"
+order += "wireless _first_"
+#order += "load"
+#order += "cpu_temperature 0"
+order += "cpu_usage"
+order += "memory"
+order += "battery all"
+order += "tztime local"
+order += "volume master"
+
+disk "/" {
+    format = "<span foreground='#93a1a1'>  %free </span>"
+}
+
+disk "/home" {
+    format = "<span foreground='#93a1a1'>  %free </span>"
+}
+
+disk "/mnt/data" {
+    format = "<span foreground='#93a1a1'>  %free </span>"
+}
+
+ethernet _first_ {
+    format_up = "<span foreground='#2587cc'>  </span>"
+    format_down = "<span foreground='#93a1a1'>  </span>"
+}
+
+wireless _first_ {
+    format_up = "<span foreground='#2587cc'>  </span>"
+    format_down = "<span foreground='#93a1a1'>  </span>"
+}
+
+load {
+    format = "<span foreground='#93a1a1'>  %5min </span>"
+}
+
+cpu_temperature 0 {
+    format = "<span foreground='#93a1a1'>  %degrees °C </span>"
+    path = "/sys/class/thermal/thermal_zone0/temp"
+}
+
+cpu_usage {
+    format = "<span foreground='#93a1a1'>  %usage </span>"
+    max_threshold = 75
+    format_above_threshold = "<span foreground='#d12f2c' background='#000000'>  %usage </span>"
+    degraded_threshold = 25
+    format_above_degraded_threshold = "<span foreground='#93a1a1'>  %usage </span>"
+}
+
+memory {
+    format = "<span foreground='#93a1a1'>  %used </span>"
+    threshold_degraded = "1G"
+    format_degraded = "MEMORY < %available"
+}
+
+battery all {
+    format = "<span foreground='#93a1a1'> %status %percentage %remaining </span>"
+    format_down = "<span foreground='#93a1a1'> No Battery </span>"
+    status_chr = " "
+    status_bat = " "
+    status_unk = " "
+    status_full = " "
+    path = "/sys/class/power_supply/BAT%d/uevent"
+    low_threshold = 15
+}
+
+volume master {
+    format = "<span foreground='#000000' background='#819400'>  %volume </span>"
+    format_muted = "<span foreground='#000000' background='#d12f2c'>  sound muted </span>"
+    device = "default"
+    mixer = "Master"
+    mixer_idx = 0
+}
+
+tztime local {
+    format = "<span foreground='#93a1a1' background='#263640'> %time </span>"
+    format_time = "%a %d %b, %I:%M %P"
+    timezone = "Europe/Prague"
+    locale = "en_US.UTF-8"
+}

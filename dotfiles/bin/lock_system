@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+LOCK="/home/$USER/Pictures/lock.png"
+
+if [ ! -e $LOCK ] ; then
+    i3lock -u -t --color=000000
+else
+    i3lock -u -t -i $LOCK
+fi

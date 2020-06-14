@@ -9,6 +9,17 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
+set_from_resource $fg foreground
+set_from_resource $bg background
+set_from_resource $fbg color8
+set_from_resource $dark color0
+set_from_resource $red color1
+set_from_resource $green color2
+set_from_resource $blue color4
+set_from_resource $focus color2
+set_from_resource $urgent color10
+set_from_resource $neutral color4
+
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -47,11 +58,11 @@ bindsym $mod+Shift+q kill
 bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '
+bindsym $mod+d exec dmenu_run -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -nf '#93A1A1' -nb '#002B36' -sb '#2980B9' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' -p ' '"
+bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14'"
 
 # change focus
 bindsym $mod+j focus left
@@ -117,25 +128,25 @@ bindsym $mod+a focus parent
 #bindsym $mod+d focus child
 
 #terminals
-set $workspace1 "1    "
+set $workspace1 "1"
 #web
-set $workspace2 "2    "
+set $workspace2 "2"
 #code
-set $workspace3 "3    "
+set $workspace3 "3"
 #files
-set $workspace4 "4    "
+set $workspace4 "4"
 #databases
-set $workspace5 "5    "
+set $workspace5 "5"
 #documents
-set $workspace6 "6    "
+set $workspace6 "6"
 #pdfs
-set $workspace7 "7    "
+set $workspace7 "7"
 #images
-set $workspace8 "8    "
+set $workspace8 "8"
 #media
-set $workspace9 "9    "
+set $workspace9 "9"
 #tools
-set $workspace10 "10    "
+set $workspace10 "10"
 
 # switch to workspace
 bindsym $mod+plus workspace $workspace1
@@ -176,7 +187,7 @@ assign [class="(?i)evince|(?i)mupdf"] → $workspace7
 assign [class="(?i)gimp|(?i)inkscape|(?i)darktable|(?i)feh|(?i)shotwell"] → $workspace8
 assign [class="(?i)audacious|(?i)mplayer|(?i)picard"] → $workspace9
 assign [class="^URxvt$" instance="^ncmpcpp$"] → $workspace9
-assign [class="(?i)steam|(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes"] → $workspace10
+assign [class="(?i)steam|(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager"] → $workspace10
 
 # floating
 for_window [class="(?i)arandr"] floating enable
@@ -185,6 +196,7 @@ for_window [class="(?i)lxappearance"] floating enable
 for_window [class="(?i)pavucontrol"] floating enable
 for_window [class="(?i)skypeforlinux"] floating enable
 for_window [class="(?i)xcalc"] floating enable
+for_window [class="^URxvt$" instance="^calc"] floating enable
 
 # focus on launch
 for_window [class="(?i)arandr"] focus
@@ -195,6 +207,10 @@ for_window [class="(?i)mplayer"] focus
 for_window [class="(?i)xcalc"] focus
 for_window [class="(?i)pavucontrol"] focus
 for_window [class="(?i)mupdf"] focus
+for_window [class="^URxvt$" instance="^calc"] focus
+
+# cheatsheet
+for_window [title="cheat"] [class="feh"] floating enable, move position center, focus
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -228,17 +244,18 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym Control+Mod1+l exec --no-startup-id "$(lock_system)"
+bindsym Control+Mod1+l exec "$(lock_system)"
 
 # Controls for shutdown, reboot atc.
-set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h)
+set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), lock/switch user (l), exit i3 (e)
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p " Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '#93A1A1' -nb '#002B36' -sb '#dc322f' -sf '#ffffff' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
-    #bindsym e exec --no-startup-id i3-msg exit, mode "default"
+    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$neutral' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
     bindsym s exec --no-startup-id "$(lock_system)" && systemctl suspend, mode "default"
     bindsym h exec --no-startup-id "$(lock_system)" && systemctl hibernate, mode "default"
+    bindsym l exec --no-startup-id dm-tool lock, mode "default"
+    bindsym e exec --no-startup-id i3-msg exit, mode "default"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -262,88 +279,80 @@ mode "$mode_print" {
 bindsym Print mode "$mode_print"
 
 # Display controls
-set $mode_display Change display to laptop (l), dual-top (t), dual-right (r), HDMI (h), manual (m)
+set $mode_display Change display to laptop (l), dual-top (t), dual-right (r), DP (d), manual (m)
 mode "$mode_display" {
     # binding for get screenshot
-    bindsym l exec xrandr --output eDP-1 --mode 1920x1080 --output HDMI-1 --off, mode "default"
-    bindsym t exec xrandr --output eDP-1 --mode 1920x1080 --auto --pos 0x1080 --output HDMI-1 --mode 1920x1080 --auto --pos 0x0, mode "default"
-    bindsym r exec xrandr --output eDP-1 --mode 1920x1080 --left-of HDMI-1, mode "default"
-    bindsym h exec xrandr --output eDP-1 --off --output HDMI-1 --mode 1920x1080, mode "default"
+    bindsym l exec xrandr --output eDP-1 --mode 1920x1080 --output DP-1-1 --off, mode "default"
+    bindsym t exec xrandr --output eDP-1 --mode 1920x1080 --auto --pos 0x1080 --output DP-1-1 --mode 1920x1080 --auto --pos 0x0, mode "default"
+    bindsym r exec xrandr --output eDP-1 --mode 1920x1080 --left-of DP-1-1, mode "default"
+    bindsym d exec xrandr --output eDP-1 --off --output DP-1-1 --mode 1920x1080, mode "default"
     bindsym m exec arandr, mode "default"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym Shift+$mod+d mode "$mode_display"
+bindsym $mod+p mode "$mode_display"
 
 # window colors
 # class                 border  bground text    indicator child_border
-client.focused          #002B36 #2980B9 #FFFFFF #2980B9   #2980B9
-client.focused_inactive #002B36 #586E75 #FFFFFF #586E75   #586E75
-client.unfocused        #002B36 #002B36 #FFFFFF #002B36   #002B36
-client.urgent           #002B36 #DC322F #FFFFFF #DC322F   #DC322F
-client.placeholder      #002B36 #002B36 #FFFFFF #002B36   #002B36
-client.background               #FFFFFF
+client.focused          $bg     $focus  $bg     $dark     $dark
+client.focused_inactive $bg     $dark   $fg     $dark     $dark
+client.unfocused        $bg     $dark   $fg     $dark     $dark
+client.urgent           $bg     $urgent $bg     $dark     $dark
+client.placeholder      $bg     $dark   $fg     $dark     $dark
+client.background               $dark
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    font pango:DejaVu Sans Mono, Awasome 10
+    font pango:DejaVu Sans Mono,FontAwesome 10
     status_command i3status
     position top
-    strip_workspace_numbers yes
-    separator_symbol "  /  "
+    strip_workspace_numbers no
+    separator_symbol "•"
     tray_output none
     colors {
-        background #002B36
-        statusline #FFFFFF
-        separator  #93a1a1
+        background $bg
+        statusline $fg
+        separator  $fg
 
-        focused_workspace  #002B36 #002B36 #2980B9
-        active_workspace   #002B36 #002B36 #586575
-        inactive_workspace #002B36 #002B36 #FFFFFF
-        urgent_workspace   #002B36 #002B36 #DC322F
-        binding_mode       #002B36 #DC322F #ffffff
+        focused_workspace  $focus $focus $bg
+        active_workspace   $bg $bg $fg
+        inactive_workspace $bg $bg $fg
+        urgent_workspace   $urgent $urgent $bg
+        binding_mode       $bg $neutral $bg
     }
 }
 
 # ncmpcpp (mpd client)
-bindsym $mod+shitf+n exec urxvt -name ncmpcpp -e ncmpcpp
+bindsym $mod+m exec urxvt -name ncmpcpp -e ncmpcpp
 # ranger (file manager)
 bindsym $mod+period exec urxvt -name ranger -e ranger
-# mc (file manager)
-bindsym $mod+m exec urxvt -name mc -e mc
-# time
-bindsym $mod+t exec notify-send "Current Time" "$(print_date)"
 # now playing (mpc)
-bindsym $mod+n exec notify-send "Now Playing ♫" "$(mpc current)"
+bindsym Mod1+$mod+m exec notify-send "Now Playing ♫" "$(mpc current)"
 # my IP
-bindsym $mod+i exec notify-send "My IP" "$(hostname -I | cut -d' ' -f1)"
-# free space
-bindsym $mod+shift+s exec notify-send "Disk free space" "$(print_disk_space)"
+bindsym Mod1+$mod+i exec notify-send "My IP" "$(hostname -I | cut -d' ' -f1)"
 # Pomodoro status
-bindsym $mod+p exec pomodoro status
-# Shortcuts
-bindsym $mod+shift+h exec mupdf ~/.config/i3/shortcuts.pdf
+bindsym Mod1+$mod+p exec pomodoro status
 
 # mpc controls
-bindsym Control+$mod+y exec mpc prev
+bindsym Mod1+$mod+y exec mpc prev
 bindsym XF86AudioPrev exec mpc prev
-bindsym Control+$mod+x exec mpc play
+bindsym Mod1+$mod+x exec mpc play
 bindsym XF86AudioPlay exec mpc play
-bindsym Control+$mod+c exec mpc toggle
-bindsym Control+$mod+v exec mpc stop
+bindsym Mod1+$mod+c exec mpc toggle
+bindsym Mod1+$mod+v exec mpc stop
 bindsym XF86AudioStop exec mpc stop
-bindsym Control+$mod+b exec mpc next
+bindsym Mod1+$mod+b exec mpc next
 bindsym XF86AudioNext exec mpc next
 
 # Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 20
-bindsym XF86MonBrightnessDown exec xbacklight -dec 20
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Calculator (xcalc)
-bindsym XF86Calculator exec xcalc
+bindsym XF86Calculator exec urxvt -name calc -e calc
 
 # Alsa controls
 #bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q sset Master 5%+
@@ -353,19 +362,17 @@ bindsym XF86Calculator exec xcalc
 #bindsym $mod+KP_Subtract exec --no-startup-id amixer -q sset Master 5%-
 #bindsym $mod+KP_Multiply exec --no-startup-id amixer -q sset Master toggle
 # Pulse Audio controls
-# For me is sink 0 NVIDIA HDMI
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 1 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 1 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle # mute sou
-bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume 1 +5%
-bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume 1 -5%
-bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute 1 toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound toggle
+bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume 0 +5%
+bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume 0 -5%
+bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute 0 toggle
 
 exec --no-startup-id xmodmap ~/.Xmodmap # swap keys {Menu, Super_L}
-exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id "$(set_background)"
-exec --no-startup-id mpd
-exec --no-startup-id dunst
 exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
-exec --no-startup-id rescuetime
+exec --no-startup-id numlockx on
+exec --no-startup-id xinput set-prop 13 "Device Enabled" 0
+exec --no-startup-id dunst -lb "$dark" -nb "$dark" -cb "$dark" -lf "$fg" -nf "$fg" -cf "$fg" -lfr "$dark" -nfr "$dark" -cfr "$red"

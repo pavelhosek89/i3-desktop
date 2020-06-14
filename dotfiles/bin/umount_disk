@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+sudo umount /mnt/disk
+sudo umount /mnt/encrypted
+sudo cryptsetup close encrypted

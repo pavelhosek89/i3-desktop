@@ -35,6 +35,3 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-#mc solarized skin
-export MC_SKIN=/home/phosek/.config/mc/solarized.ini

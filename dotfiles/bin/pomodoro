@@ -12,11 +12,11 @@ __base="$(basename ${__file})"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 readonly RENDEZVOUS=/dev/shm/pomodoro
-HOURS=7         # (45 min * 8) + (6 * 5) + 30
-POMODOROS=8     # 7h work
+HOURS=8        # (45 min * 10) + (8 * 5) + 30
+POMODOROS=10   # 8h 10m work
 POMODORO=2700   # 45 min
 SHORT=300       # 5 min
-LONG=1800       # 30 min
+LONG=1800       # 30 min (lunch)
 TYPE="w"        # w - working, s - short, l - long
 TIME=$(($POMODORO/60))   # time to end pomodoro or short break or long break
 declare -a SHM_POMODORO
@@ -149,17 +149,17 @@ pomodoro() {
         #notify-send "Pomodoro Counter" "Time for Pomodoro #$c, work!"
         pomodoro_sleep $POMODORO $c
         if [[ $c != $POMODOROS ]]; then
-            if [[ "$pomodoro_cicle" = 4 ]]; then
+            if [[ "$pomodoro_cicle" = 5 ]]; then
                 notify_send "Good job, long break time !" ""
                 pomodoro_cicle=0
-                break_sleep $LONG # long break of 15 min
+                break_sleep $LONG # long break of 10 min
             else
                 notify_send "Break time n°$c!" ""
                 break_sleep $SHORT # short break of 5 min 
             fi
         fi
     done
-    notify_send "Pomodoro" "No more pomodoros left! You worked for 7 hours."
+    notify_send "Pomodoro" "No more pomodoros left! You worked for $HOURS hours."
     #notify-send "Pomodoro Counter" "No more pomodoros left!"
 }
 
@@ -171,8 +171,8 @@ display_help() {
     echo
     echo "   -h                     print this help message"
     echo
-    echo "   -c [count]             set number of pomodoros [8x]"
-    echo "   -l [min]               set time for long pause [15 min]"
+    echo "   -c [count]             set number of pomodoros [10x]"
+    echo "   -l [min]               set time for long pause [30 min]"
     echo "   -p [min]               set time for pomodoro [45 min]"
     echo "   -s [min]               set time for short pause [5 min]"
     echo
