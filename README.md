@@ -33,7 +33,7 @@ BIN_FILES=lock_system mount_disk pomodoro record set_background stop_recording
 CONFIG_FILES=dunst htop i3 i3status mc redshift
 HOME_FILES=.bash_profile .bashrc .profile .vimrc .Xmodmap .Xresources bin .mplayer .ncmpcpp
 MKDIR=.config Documents/Development Downloads Music Pictures/Screenshot Videos
-MNT_DIR=cd encrypted disk dvd fd img
+MNT_DIR=cd encrypted disk dvd fd img/p1 img/p2
 DOCKER_UBUNTU_VER=eoan
 ```
 

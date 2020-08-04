@@ -11,9 +11,9 @@ rsync -ahrtuv \
     /home/$USER/Videos/ /mnt/disk/Videos/
 
 echo -e "\n\e[1;31mPROFILES\e[0m"
-sudo rsync -ahrtuv --files-from=files-profiles \
+sudo rsync -ahrtuv --delete --files-from=files-profiles \
     /home/ /mnt/encrypted/profiles/
 
 echo -e "\n\e[1;31mOPT\e[0m"
-sudo rsync -ahrtuv --files-from=files-opt \
+sudo rsync -ahrtuv --delete --files-from=files-opt \
     /opt/ /mnt/encrypted/opt/

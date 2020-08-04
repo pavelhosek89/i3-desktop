@@ -1,3 +1,4 @@
+android-file-transfer
 apache2-utils
 apt-transport-https
 arandr
@@ -55,12 +56,14 @@ rxvt-unicode
 screenfetch
 scrot
 software-properties-common
+taskwarrior
 tlp
 tlp-rdw
 ubuntu-restricted-extras
 ukui-greeter
 unzip
 vim
+vit
 wget
 whois
 xbacklight
