@@ -35,6 +35,7 @@ HOME_FILES=.bash_profile .bashrc .profile .vimrc .Xmodmap .Xresources bin .mplay
 MKDIR=.config Documents/Development Downloads Music Pictures/Screenshot Videos
 MNT_DIR=cd encrypted disk dvd fd img/p1 img/p2
 DOCKER_UBUNTU_VER=eoan
+UBUNTU_VER=focal
 ```
 
 ## Shortcuts
