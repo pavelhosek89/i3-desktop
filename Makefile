@@ -25,6 +25,8 @@ help:
 	@echo "  install-sqlitebrowser      Install DB Browser for SQLite"
 	@echo "  install-subl               Install Sublime Text 3 IDE"
 	@echo "  install-system             System installation without development software"
+	@echo "  install-virt               Install libvirt Virtualization"
+	@echo "  install-virtualbox         Install VirtualBox Virtualization"
 	@echo "  list-users                 List users (PROFILES) from .env"
 
 apt-update:
@@ -42,9 +44,9 @@ backup-profiles:
 	@bash ./backup-profiles-data
 
 clean:
-	@sudo apt-get autoclean
-	@sudo apt-get clean
-	@sudo apt-get autoremove
+	@sudo apt autoclean
+	@sudo apt clean
+	@sudo apt autoremove
 
 create-user:
 	@if id -u $(PROFILE) >/dev/null 2>&1; then \
@@ -74,7 +76,7 @@ install-de:
 	@sudo usermod -a -G audio $(PROFILE)
 
 install-dev:
-	@make install-docker install-subl install-virt install-sqlitebrowser install-chrome
+	@make install-docker install-subl install-sqlitebrowser install-chrome
 
 install-docker:
 	@wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -93,7 +95,7 @@ install-chrome:
 install-sqlitebrowser:
 	@sudo add-apt-repository -y ppa:linuxgndu/sqlitebrowser
 	@make apt-update
-	@sudo apt-get install sqlitebrowser
+	@sudo apt install sqlitebrowser
 
 install-subl:
 	@wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
@@ -113,6 +115,13 @@ install-package:
 install-virt:
 	@xargs -a packages-virt sudo apt install
 	@make set-group-virt
+
+install-virtualbox:
+	@wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+	@wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+	@sudo sh -c 'echo "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(UBUNTU_VER) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
+	@make apt-update
+	@sudo apt install virtualbox
 
 list-users:
 	@for user in $(PROFILES) ; do echo $$user ; done
