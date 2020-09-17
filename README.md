@@ -1,6 +1,29 @@
 # i3-Desktop
 
-My configs for my i3 desktop
+My configs for my i3 desktop. \
+Wallpaper edit from [Keiraarts](https://www.behance.net/gallery/10698789/Isometric-Low-Poly-World).
+
+INFO:
+* **distro:** ubuntu
+* **wm:** i3
+* **bar:** i3status
+* **lock screen:** i3lock
+* **login manager:** ukui-greeter
+* **terminal:** urxvt
+* **shell:** bash
+* **file manager:** ranger, mc
+* **editor:** vim, Sublime Text 3
+* **app launcher:** dmenu
+* **gtk theme:** arc-theme
+* **image viewer:** feh
+* **notification:** dunst
+
+RUN ON:
+* **ntb:** DELL Latitude E7470
+* **cpu:** Intel Core i7-6600U @ 4x 3.4GHz
+* **ram:** 2x8GB DDR4 2133MHz
+* **gpu:** Intel(R) HD Graphics 520 (SKL GT2)
+* **disk:** Samsung 970 EVO NVMe M.2 SSD 500 GB
 
 **Tested on Ubuntu 20.04 "Focal Fossa"**
 
