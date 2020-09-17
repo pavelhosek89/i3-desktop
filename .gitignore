@@ -1,4 +1,6 @@
 .env
+backup/*
+pkgs/*
+!pkgs/base
+!pkgs/virt
 profiles/*
-files-opt
-files-profiles

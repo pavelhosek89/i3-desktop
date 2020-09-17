@@ -21,11 +21,10 @@ help:
 	@echo "  install-dev                Install development application"
 	@echo "  install-docker             Install docker and docker-compose"
 	@echo "  install-chrome             Install Google Chrome browser"
-	@echo "  install-package            Install all packages in packages file"
+	@echo "  install-package            Install all packages from files in ./pkgs folder"
 	@echo "  install-sqlitebrowser      Install DB Browser for SQLite"
 	@echo "  install-subl               Install Sublime Text 3 IDE"
 	@echo "  install-system             System installation without development software"
-	@echo "  install-virt               Install libvirt Virtualization"
 	@echo "  install-virtualbox         Install VirtualBox Virtualization"
 	@echo "  list-users                 List users (PROFILES) from .env"
 
@@ -41,7 +40,7 @@ backup-dotfiles:
 	@for file in $(BIN_FILES) ; do sudo chmod u-x $(shell pwd)/dotfiles/bin/$$file ; done
 
 backup-profiles:
-	@bash ./backup-profiles-data
+	@bash ./backup-profiles-data.sh
 
 clean:
 	@sudo apt autoclean
@@ -57,7 +56,7 @@ create-users:
 	@for user in $(PROFILES) ; do make create-user PROFILE=$$user ; done
 
 install-all:
-	@make install-dev clean
+	@make install-system install-dev clean
 
 install-de:
 	@for dir in $(MKDIR) ; do sudo mkdir -p /home/$(PROFILE)/$$dir ; done
@@ -76,7 +75,7 @@ install-de:
 	@sudo usermod -a -G audio $(PROFILE)
 
 install-dev:
-	@make install-docker install-subl install-sqlitebrowser install-chrome
+	@make install-chrome install-docker install-sqlitebrowser install-subl
 
 install-docker:
 	@wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -110,10 +109,7 @@ install-system:
 	@for direct in $(MNT_DIR) ; do sudo mkdir /mnt/$$direct ; done
 
 install-package:
-	@xargs -a packages sudo apt install
-
-install-virt:
-	@xargs -a packages-virt sudo apt install
+	@for file in $(shell ls -d $(PWD)/pkgs/*); do xargs -a $$file sudo apt install ; done
 	@make set-group-virt
 
 install-virtualbox:

@@ -21,6 +21,7 @@ My Configs For My i3 Desktop
 * `urxvt` set as default terminal
 * `yaru-theme-icon`
 
+
 ## .env example
 
 ```bash
@@ -37,6 +38,124 @@ MNT_DIR=cd encrypted disk dvd fd img/p1 img/p2
 DOCKER_UBUNTU_VER=eoan
 UBUNTU_VER=focal
 ```
+
+## Backups example
+### etc
+
+```bash
+hosts
+mpd.conf
+nginx/sites-available
+```
+
+### opt
+
+```bash
+Postman
+pi-gen
+usbboot
+```
+
+### profiles
+
+```bash
+user/.config/dunst/
+user/.config/htop/
+user/.config/i3/
+user/.config/i3status/
+user/.config/mc/
+user/.config/redshift/
+user/.mplayer/
+user/.ncmpcpp/
+user/Documents/
+user/Downloads/
+user/Pictures/
+user/bin/
+user/.Xmodmap
+user/.Xresources
+user/.bash_history
+user/.bash_profile
+user/.bashrc
+user/.face
+user/.profile
+user/.vimrc
+user2/.config/dunst/
+user2/.config/htop/
+user2/.config/i3/
+user2/.config/i3status/
+user2/.config/mc/
+user2/.config/redshift/
+user2/.mplayer/
+user2/.ncmpcpp/
+user2/Documents/
+user2/Downloads/
+user2/Pictures/
+user2/bin/
+user2/.Xmodmap
+user2/.Xresources
+user2/.bash_history
+user2/.bash_profile
+user2/.bashrc
+user2/.face
+user2/.profile
+user2/.vimrc
+user3/.config/dunst/
+user3/.config/htop/
+user3/.config/i3/
+user3/.config/i3status/
+user3/.config/mc/
+user3/.config/redshift/
+user3/.mplayer/
+user3/.ncmpcpp/
+user3/Documents/
+user3/Downloads/
+user3/Pictures/
+user3/bin/
+user3/.Xmodmap
+user3/.Xresources
+user3/.bash_history
+user3/.bash_profile
+user3/.bashrc
+user3/.face
+user3/.profile
+user3/.vimrc
+```
+
+## Install
+
+* install Ubuntu minimal [How to install Ubuntu from Minimal CD (with UEFI)](https://www.onetransistor.eu/2015/12/install-ubuntu-minimal-cd-uefi-enabled.html)
+* set `GRUB_CMDLINE_LINUX_DEFAULT="text"` and uncomment `GRUB_TERMINAL=console` in **/etc/default/grub**
+* `sudo update-grub`
+* `sudo mkdir /opt/i3-desktop`
+* `sudo chown $USER:$USER /opt/i3-desktop`
+* `git clone https://gitlab.com/pavelhosek89/i3-desktop.git /opt/i3-desktop`
+* `cd /opt/i3-desktop`
+* `sudo apt update; sudo apt upgrade; sudo apt install make`
+* `make install-all`
+
+
+## After install
+
+* MPD - update music database
+  * `ln -s ~/Music /var/lib/mpd/music`
+  * `mpc update`
+* Vim - install plugins
+  * `vim +PluginInstall +qall`
+* systemctl - disable unnecessary services
+  * `sudo systemctl disable accounts-daemon.service`
+  * `sudo systemctl disable apport.service`
+  * `sudo systemctl disable apt-daily-upgrade.timer`
+  * `sudo systemctl disable apt-daily.timer`
+  * `sudo systemctl disable ModemManager.service`
+  * `sudo systemctl disable NetworkManager-wait-online.service`
+  * `sudo systemctl disable NetworkManager.service`
+  * `sudo systemctl disable pppd-dns.service`
+* journalctl - repair error
+  * comment line in **/etc/pam.d/lightdm** and **/etc/pam.d/lightdm-greeter** where is **pam_gnome_keyring.so** or **pam_kwallet.so** or **pam_kwallet.so**
+  * delete user start service for mpd and dunst: `sudo rm /usr/lib/systemd/user/dunst.service`, `sudo rm /usr/lib/systemd/user/mpd.service`, `sudo rm /usr/lib/systemd/user/mpd.socket`
+  * set **zeroconf_enabled** to “no” in **/etc/mpd.conf**
+  * set **COMPRESS=gzip** in **/etc/initramfs-tools/initramfs.conf** and run `sudo update-initramfs -u`
+
 
 ## Shortcuts
 
@@ -99,28 +218,37 @@ UBUNTU_VER=focal
 
 mod1 = Alt key; mod4 = Win key ($mod) 
 
+
 ## Screenshots
-![i3-desktop](screenshots/desktop.png)
+![single desktop](screenshots/desktop_single_monitor.png)
+desktop - single monitor
 
-![i3-desktop](screenshots/screenfetch_ranger_ncmpcpp.png)
+![dual desktop](screenshots/desktop_dual_monitor.png)
+desktop - dual monitor
 
-![i3-desktop](screenshots/i3lock.png)
+![htop, mplayer, screenfetch, ranger](screenshots/htop_mplayer_screenfetch_ranger.png)
+htop, mplayer, screenfetch, ranger
+
+![login screen](screenshots/loginscreen.png)
+login screen
+
+![i3 lock](screenshots/i3lock.png)
 i3lock
 
-![i3-desktop](screenshots/notification.png)
+![notification](screenshots/notification.png)
 dunst (notification)
 
-![i3-desktop](screenshots/dmenu_desktop.png)
+![dmenu desktop](screenshots/dmenu_desktop.png)
 dmenu desktop
 
-![i3-desktop](screenshots/dmenu.png)
+![dmenu](screenshots/dmenu.png)
 dmenu
 
-![i3-desktop](screenshots/mode_power.png)
+![power mode](screenshots/mode_power.png)
 power mode
 
-![i3-desktop](screenshots/mode_print.png)
+![print mode](screenshots/mode_print.png)
 print mode
 
-![i3-desktop](screenshots/mode_display.png)
+![display mode](screenshots/mode_display.png)
 display mode
