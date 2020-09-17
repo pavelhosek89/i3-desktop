@@ -1,6 +1,8 @@
 # i3-Desktop
 
-My Configs For My i3 Desktop
+My configs for my i3 desktop
+
+**Tested on Ubuntu 20.04 "Focal Fossa"**
 
 ## Dependencies
 ### Ubuntu
@@ -123,24 +125,39 @@ user3/.vimrc
 
 ## Install
 
-* install Ubuntu minimal [How to install Ubuntu from Minimal CD (with UEFI)](https://www.onetransistor.eu/2015/12/install-ubuntu-minimal-cd-uefi-enabled.html)
+* install Ubuntu minimal
+  * [Ubuntu 20.04 "Focal Fossa" ](http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso)
+  * [How to install Ubuntu from Minimal CD (with UEFI)](https://www.onetransistor.eu/2015/12/install-ubuntu-minimal-cd-uefi-enabled.html)
+* `sudo apt update; sudo apt upgrade; sudo apt install git make`
 * set `GRUB_CMDLINE_LINUX_DEFAULT="text"` and uncomment `GRUB_TERMINAL=console` in **/etc/default/grub**
 * `sudo update-grub`
 * `sudo mkdir /opt/i3-desktop`
 * `sudo chown $USER:$USER /opt/i3-desktop`
 * `git clone https://gitlab.com/pavelhosek89/i3-desktop.git /opt/i3-desktop`
 * `cd /opt/i3-desktop`
-* `sudo apt update; sudo apt upgrade; sudo apt install make`
 * `make install-all`
 
 
 ## After install
 
+* Sublime Text - install packages
+  * BracketHighlighter
+  * EditorConfig
+  * Emmet
+  * GitGutter
+  * Increment Selection
+  * Nette + Latte + Neon
+  * PhpDoc
+  * SFTP
+  * SideBarEnhancements
+  * Solarized Color Scheme
+  * TrailingSpaces
+  * Xdebug Client
 * MPD - update music database
   * `ln -s ~/Music /var/lib/mpd/music`
   * `mpc update`
 * Vim - install plugins
-  * `vim +PluginInstall +qall`
+  * `vim +PluginInstall +qall` - run under all users
 * systemctl - disable unnecessary services
   * `sudo systemctl disable accounts-daemon.service`
   * `sudo systemctl disable apport.service`
@@ -155,6 +172,10 @@ user3/.vimrc
   * delete user start service for mpd and dunst: `sudo rm /usr/lib/systemd/user/dunst.service`, `sudo rm /usr/lib/systemd/user/mpd.service`, `sudo rm /usr/lib/systemd/user/mpd.socket`
   * set **zeroconf_enabled** to “no” in **/etc/mpd.conf**
   * set **COMPRESS=gzip** in **/etc/initramfs-tools/initramfs.conf** and run `sudo update-initramfs -u`
+* permissions - set, if do have instalation without restore data
+  * `sudo find /home/$USER/ -type f -exec chmod 644 {} \;`
+  * `sudo find /home/$USER/ -type d -exec chmod 755 {} \;`
+
 
 
 ## Shortcuts
@@ -216,7 +237,7 @@ user3/.vimrc
 | $mod+KP_Subtract                   | pactl set-sink-volume 1 -5%                                |
 | $mod+KP_Multiply                   | pactl set-sink-mute 1 toggle                               |
 
-mod1 = Alt key; mod4 = Win key ($mod) 
+mod1 = Alt key; mod4 = Win key ($mod)
 
 
 ## Screenshots

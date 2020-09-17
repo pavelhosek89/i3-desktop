@@ -57,6 +57,7 @@ create-users:
 
 install-all:
 	@make install-system install-dev clean
+	@make set-group-virt
 
 install-de:
 	@for dir in $(MKDIR) ; do sudo mkdir -p /home/$(PROFILE)/$$dir ; done
@@ -110,7 +111,6 @@ install-system:
 
 install-package:
 	@for file in $(shell ls -d $(PWD)/pkgs/*); do xargs -a $$file sudo apt install ; done
-	@make set-group-virt
 
 install-virtualbox:
 	@wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
