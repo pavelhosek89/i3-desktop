@@ -107,7 +107,7 @@ install-system:
 	@make apt-update apt-upgrade install-package create-users
 	@sudo cp $(shell pwd)/files/background-ubuntu.png /usr/share/ukui-greeter/images/background-ubuntu.png
 	@for user in $(PROFILES) ; do make install-de PROFILE=$$user ; done
-	@for direct in $(MNT_DIR) ; do sudo mkdir /mnt/$$direct ; done
+	@for direct in $(MNT_DIR) ; do sudo mkdir -p /mnt/$$direct ; done
 
 install-package:
 	@for file in $(shell ls -d $(PWD)/pkgs/*); do xargs -a $$file sudo apt install ; done
