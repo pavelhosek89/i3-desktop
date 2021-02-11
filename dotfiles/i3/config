@@ -340,7 +340,7 @@ bindsym Mod1+$mod+p exec pomodoro status
 bindsym Mod1+$mod+y exec mpc prev
 bindsym XF86AudioPrev exec mpc prev
 bindsym Mod1+$mod+x exec mpc play
-bindsym XF86AudioPlay exec mpc play
+bindsym XF86AudioPlay exec mpc toggle
 bindsym Mod1+$mod+c exec mpc toggle
 bindsym Mod1+$mod+v exec mpc stop
 bindsym XF86AudioStop exec mpc stop
@@ -374,5 +374,5 @@ exec --no-startup-id "$(set_background)"
 exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
-exec --no-startup-id xinput set-prop 13 "Device Enabled" 0
+#exec --no-startup-id xinput set-prop 13 "Device Enabled" 0
 exec --no-startup-id dunst -lb "$dark" -nb "$dark" -cb "$dark" -lf "$fg" -nf "$fg" -cf "$fg" -lfr "$dark" -nfr "$dark" -cfr "$red"
