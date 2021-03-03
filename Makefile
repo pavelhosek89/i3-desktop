@@ -57,7 +57,6 @@ create-users:
 
 install-all:
 	@make install-system install-dev clean
-	@make set-group-virt
 
 install-de:
 	@for dir in $(MKDIR) ; do sudo mkdir -p /home/$(PROFILE)/$$dir ; done
@@ -127,7 +126,4 @@ reset-owner:
 
 set-group-docker:
 	@for user in $(PROFILES) ; do sudo usermod -a -G docker $$user ; done
-
-set-group-virt:
-	@for user in $(PROFILES) ; do sudo usermod -a -G libvirt $$user ; done
 
