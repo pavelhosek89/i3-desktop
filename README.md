@@ -3,8 +3,10 @@
 My configs for i3 desktop. \
 Wallpaper edit from [Keiraarts](https://www.behance.net/gallery/10698789/Isometric-Low-Poly-World).
 
+All colors in the system are by Solarized dark (color scheme).
+
 INFO:
-* **distro:** ubuntu
+* **distro:** Ubuntu 20.04 "Focal Fossa"
 * **wm:** i3
 * **bar:** i3status
 * **lock screen:** i3lock
@@ -24,8 +26,6 @@ RUN ON:
 * **ram:** 2x8GB DDR4 2133MHz
 * **gpu:** Intel(R) HD Graphics 520 (SKL GT2)
 * **disk:** Samsung 970 EVO NVMe M.2 SSD 500 GB
-
-**Tested on Ubuntu 20.04 "Focal Fossa"**
 
 ## Dependencies
 ### Ubuntu
@@ -253,12 +253,12 @@ user3/.vimrc
 | XF86MonBrightnessUp                | xbacklight -inc 20                                         |
 | XF86MonBrightnessDown              | xbacklight -dec 20                                         |
 | XF86Calculator                     | xcalc                                                      |
-| XF86AudioRaiseVolume               | pactl set-sink-volume 1 +5%                                |
-| XF86AudioLowerVolume               | pactl set-sink-volume 1 -5%                                |
-| XF86AudioMute                      | pactl set-sink-mute 1 toggle                               |
-| $mod+KP_Add                        | pactl set-sink-volume 1 +5%                                |
-| $mod+KP_Subtract                   | pactl set-sink-volume 1 -5%                                |
-| $mod+KP_Multiply                   | pactl set-sink-mute 1 toggle                               |
+| XF86AudioRaiseVolume               | pactl set-sink-volume 0 +5%                                |
+| XF86AudioLowerVolume               | pactl set-sink-volume 0 -5%                                |
+| XF86AudioMute                      | pactl set-sink-mute 0 toggle                               |
+| $mod+KP_Add                        | pactl set-sink-volume 0 +5%                                |
+| $mod+KP_Subtract                   | pactl set-sink-volume 0 -5%                                |
+| $mod+KP_Multiply                   | pactl set-sink-mute 0 toggle                               |
 
 mod1 = Alt key; mod4 = Win key ($mod)
 

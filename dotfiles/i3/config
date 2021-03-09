@@ -21,6 +21,7 @@ set_from_resource $urgent color10
 set_from_resource $neutral color4
 
 set $mod Mod4
+set $sink 0
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -352,7 +353,7 @@ bindsym XF86MonBrightnessUp exec xbacklight -inc 10
 bindsym XF86MonBrightnessDown exec xbacklight -dec 10
 
 # Calculator (xcalc)
-bindsym XF86Calculator exec urxvt -name calc -e calc
+bindsym XF86Calculator exec xcalc
 
 # Alsa controls
 #bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q sset Master 5%+
@@ -362,17 +363,16 @@ bindsym XF86Calculator exec urxvt -name calc -e calc
 #bindsym $mod+KP_Subtract exec --no-startup-id amixer -q sset Master 5%-
 #bindsym $mod+KP_Multiply exec --no-startup-id amixer -q sset Master toggle
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound toggle
-bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute 0 toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $sink +5% # increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $sink -5% # decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute $sink toggle # mute sound toggle
+bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume $sink +5%
+bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume $sink -5%
+bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute $sink toggle
 
 exec --no-startup-id xmodmap ~/.Xmodmap # swap keys {Menu, Super_L}
 exec --no-startup-id "$(set_background)"
 exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
-#exec --no-startup-id xinput set-prop 13 "Device Enabled" 0
 exec --no-startup-id dunst -lb "$dark" -nb "$dark" -cb "$dark" -lf "$fg" -nf "$fg" -cf "$fg" -lfr "$dark" -nfr "$dark" -cfr "$red"

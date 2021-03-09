@@ -9,11 +9,8 @@ help:
 	@echo "Usage: make COMMAND"
 	@echo ""
 	@echo "Commands:"
-	@echo "  apt-update                 Updating the database of available packages"
-	@echo "  apt-upgrade                Install new available packages"
 	@echo "  backup-dotfiles            Backup dotfiles configuration (i3 and other)"
 	@echo "  backup-profiles            Backup profile data by rsync from file spec"
-	@echo "  clean                      "
 	@echo "  create-user PROFILE=<user> Create user if not exist"
 	@echo "  create-users               Create users (PROFILES) from .env"
 	@echo "  install-all                Complete system installation for work and entertainment"
@@ -28,9 +25,11 @@ help:
 	@echo "  install-virtualbox         Install VirtualBox Virtualization"
 	@echo "  list-users                 List users (PROFILES) from .env"
 
+# Updating the database of available packages
 apt-update:
 	@sudo apt update
 
+# Install new available packages
 apt-upgrade:
 	@sudo apt upgrade
 
@@ -42,6 +41,7 @@ backup-dotfiles:
 backup-profiles:
 	@bash ./backup-profiles-data.sh
 
+# Clean apt after upgrade system
 clean:
 	@sudo apt autoclean
 	@sudo apt clean
