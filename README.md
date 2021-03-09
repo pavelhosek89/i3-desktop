@@ -55,10 +55,10 @@ RUN ON:
 ADMIN=user
 PROFILES=user user2 user3
 
-BIN_FILES=lock_system mount_disk pomodoro record set_background stop_recording
+BIN_FILES=lock_system mount_disk mpdnotify pomodoro record set_background stop_recording umount_disk
 CONFIG_FILES=dunst htop i3 i3status mc redshift
-HOME_FILES=.bash_profile .bashrc .profile .vimrc .Xmodmap .Xresources bin .mplayer .ncmpcpp
-MKDIR=.config Documents/Development Downloads Music Pictures/Screenshot Videos
+HOME_FILES=.bash_profile .bashrc .profile .vimrc .XCalc .Xmodmap .Xresources bin .mplayer .ncmpcpp
+MKDIR=.config Documents Downloads Music Pictures/Screenshot Videos
 MNT_DIR=cd encrypted disk dvd fd img/p1 img/p2
 DOCKER_UBUNTU_VER=eoan
 UBUNTU_VER=focal
@@ -85,6 +85,7 @@ usbboot
 
 ```bash
 user/.config/dunst/
+user/.config/gtk-3.0/settings.ini
 user/.config/htop/
 user/.config/i3/
 user/.config/i3status/
@@ -96,15 +97,18 @@ user/Documents/
 user/Downloads/
 user/Pictures/
 user/bin/
+user/.XCalc
 user/.Xmodmap
 user/.Xresources
 user/.bash_history
 user/.bash_profile
 user/.bashrc
 user/.face
+user/.gtkrc-2.0
 user/.profile
 user/.vimrc
 user2/.config/dunst/
+user2/.config/gtk-3.0/settings.ini
 user2/.config/htop/
 user2/.config/i3/
 user2/.config/i3status/
@@ -116,15 +120,18 @@ user2/Documents/
 user2/Downloads/
 user2/Pictures/
 user2/bin/
+user2/.XCalc
 user2/.Xmodmap
 user2/.Xresources
 user2/.bash_history
 user2/.bash_profile
 user2/.bashrc
 user2/.face
+user2/.gtkrc-2.0
 user2/.profile
 user2/.vimrc
 user3/.config/dunst/
+user3/.config/gtk-3.0/settings.ini
 user3/.config/htop/
 user3/.config/i3/
 user3/.config/i3status/
@@ -136,12 +143,14 @@ user3/Documents/
 user3/Downloads/
 user3/Pictures/
 user3/bin/
+user3/.XCalc
 user3/.Xmodmap
 user3/.Xresources
 user3/.bash_history
 user3/.bash_profile
 user3/.bashrc
 user3/.face
+user3/.gtkrc-2.0
 user3/.profile
 user3/.vimrc
 ```
@@ -198,6 +207,8 @@ user3/.vimrc
 * permissions - set, if do have instalation without restore data
   * `sudo find /home/$USER/ -type f -exec chmod 644 {} \;`
   * `sudo find /home/$USER/ -type d -exec chmod 755 {} \;`
+* set GKT3 and GTK2 in lxappearance
+  * `lxappearance`
 
 
 
