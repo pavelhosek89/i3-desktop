@@ -1,6 +1,0 @@
-.env
-backup/*
-pkgs/*
-!pkgs/base
-!pkgs/virt
-profiles/*

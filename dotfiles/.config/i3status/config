@@ -1,0 +1,34 @@
+general {
+    output_format = "i3bar"
+    colors = false
+    markup = pango
+    color_good = "#819400"
+    color_degraded = "#2587cc"
+    color_bad = "#d12f2c"
+}
+
+
+order += "ethernet _first_"
+order += "tztime local"
+order += "volume master"
+
+
+ethernet _first_ {
+    format_up = ""
+    format_down = "<span foreground='#d12f2c'></span>"
+}
+
+tztime local {
+    format = "%time"
+    format_time = "%a %d %b, %I:%M %P"
+    timezone = "Europe/Prague"
+    locale = "en_US.UTF-8"
+}
+
+volume master {
+    format = "<span foreground='#000000' background='#819400'>  %volume </span>"
+    format_muted = "<span foreground='#000000' background='#d12f2c'>  sound muted </span>"
+    device = "default"
+    mixer = "Master"
+    mixer_idx = 0
+}

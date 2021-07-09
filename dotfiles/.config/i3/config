@@ -176,18 +176,19 @@ bindsym $mod+Shift+eacute move container to workspace $workspace10
 assign [class="(?i)xterm|(?i)gnome-terminal"] → $workspace1
 assign [class="^URxvt$" instance="^urxvt$"] → $workspace1
 assign [class="(?i)opera|(?i)firefox|(?i)google-chrome|(?i)geary|(?i)hipchat|(?i)weechat|(?i)skypeforlinux|(?i)slack"] → $workspace2
-assign [class="(?i)subl"] → $workspace3
+assign [class="(?i)sublime_text|(?i)gedit|(?i)scite"] → $workspace3
 assign [class="(?i)nautilus|(?i)thunar"] → $workspace4
 assign [class="^URxvt$" instance="^ranger"] → $workspace4
 assign [class="^URxvt$" instance="^mc$"] → $workspace4
-assign [class="(?i)mysql-workbench"] → $workspace5
-assign [class="(?i)gedit|(?i)scite"] → $workspace6
-assign [class="(?i)libreoffice|(?i)libreoffice-calc|(?i)libreoffice-impress|(?i)libreoffice-math|(?i)libreoffice-writer|(?i)soffice"] → $workspace6
-assign [class="(?i)evince|(?i)mupdf"] → $workspace7
-assign [class="(?i)gimp|(?i)inkscape|(?i)darktable|(?i)feh|(?i)shotwell"] → $workspace8
-assign [class="(?i)audacious|(?i)mplayer|(?i)picard"] → $workspace9
-assign [class="^URxvt$" instance="^ncmpcpp$"] → $workspace9
-assign [class="(?i)steam|(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager"] → $workspace10
+assign [class="(?i)libreoffice|(?i)libreoffice-calc|(?i)libreoffice-impress|(?i)libreoffice-math|(?i)libreoffice-writer|(?i)soffice"] → $workspace5
+assign [class="(?i)evince|(?i)mupdf"] → $workspace5
+assign [class="(?i)gimp|(?i)inkscape|(?i)darktable|(?i)feh|(?i)shotwell"] → $workspace6
+assign [class="(?i)audacious|(?i)picard"] → $workspace7
+assign [class="^URxvt$" instance="^ncmpcpp$"] → $workspace7
+assign [class="(?i)mplayer"] → $workspace8
+assign [class="(?i)steam"] → $workspace9
+assign [class="(?i)minecraft .*"] → $workspace9
+assign [class="(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager"] → $workspace10
 
 # floating
 for_window [class="(?i)arandr"] floating enable
@@ -197,6 +198,9 @@ for_window [class="(?i)pavucontrol"] floating enable
 for_window [class="(?i)skypeforlinux"] floating enable
 for_window [class="(?i)xcalc"] floating enable
 for_window [class="^URxvt$" instance="^calc"] floating enable
+for_window [title="^Minecraft .*"] floating enable
+# kill window
+for_window [title="Steam - Update News"] kill
 
 # focus on launch
 for_window [class="(?i)arandr"] focus
@@ -208,9 +212,6 @@ for_window [class="(?i)xcalc"] focus
 for_window [class="(?i)pavucontrol"] focus
 for_window [class="(?i)mupdf"] focus
 for_window [class="^URxvt$" instance="^calc"] focus
-
-# cheatsheet
-for_window [title="cheat"] [class="feh"] floating enable, move position center, focus
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -244,17 +245,16 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym Control+Mod1+l exec "$(lock_system)"
+bindsym Control+Mod1+l exec lock_system
 
 # Controls for shutdown, reboot atc.
-set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), lock/switch user (l), exit i3 (e)
+set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), exit i3 (e)
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
     bindsym p exec --no-startup-id echo "OK" | dmenu -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$neutral' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
-    bindsym s exec --no-startup-id "$(lock_system)" && systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id "$(lock_system)" && systemctl hibernate, mode "default"
-    bindsym l exec --no-startup-id dm-tool lock, mode "default"
+    bindsym s exec --no-startup-id lock_system && systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id lock_system && systemctl hibernate, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
 
     # back to normal: Enter or Escape
@@ -294,37 +294,6 @@ mode "$mode_display" {
 }
 bindsym $mod+p mode "$mode_display"
 
-# window colors
-# class                 border  bground text    indicator child_border
-client.focused          $bg     $focus  $bg     $dark     $dark
-client.focused_inactive $bg     $dark   $fg     $dark     $dark
-client.unfocused        $bg     $dark   $fg     $dark     $dark
-client.urgent           $bg     $urgent $bg     $dark     $dark
-client.placeholder      $bg     $dark   $fg     $dark     $dark
-client.background               $dark
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-    font pango:DejaVu Sans Mono,FontAwesome 10
-    status_command i3status
-    position top
-    strip_workspace_numbers no
-    separator_symbol "•"
-    tray_output none
-    colors {
-        background $bg
-        statusline $fg
-        separator  $fg
-
-        focused_workspace  $focus $focus $bg
-        active_workspace   $bg $bg $fg
-        inactive_workspace $bg $bg $fg
-        urgent_workspace   $urgent $urgent $bg
-        binding_mode       $bg $neutral $bg
-    }
-}
-
 # ncmpcpp (mpd client)
 bindsym $mod+m exec urxvt -name ncmpcpp -e ncmpcpp
 # ranger (file manager)
@@ -347,30 +316,50 @@ bindsym XF86AudioStop exec mpc stop
 bindsym Mod1+$mod+b exec mpc next
 bindsym XF86AudioNext exec mpc next
 
-# Sreen brightness controls
-bindsym XF86MonBrightnessUp exec xbacklight -inc 10
-bindsym XF86MonBrightnessDown exec xbacklight -dec 10
-
 # Calculator (xcalc)
 bindsym XF86Calculator exec xcalc
 
-# Alsa controls
-#bindsym XF86AudioRaiseVolume exec --no-startup-id amixer -q sset Master 5%+
-#bindsym XF86AudioLowerVolume exec --no-startup-id amixer -q sset Master 5%-
-#bindsym XF86AudioMute exec --no-startup-id amixer -q sset Master toggle
-#bindsym $mod+KP_Add exec --no-startup-id amixer -q sset Master 5%+
-#bindsym $mod+KP_Subtract exec --no-startup-id amixer -q sset Master 5%-
-#bindsym $mod+KP_Multiply exec --no-startup-id amixer -q sset Master toggle
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound toggle
-bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume 0 +5%
-bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume 0 -5%
-bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute 0 toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% # increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% # decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound toggle
+bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# window colors
+# class                 border  bground text    indicator child_border
+client.focused          $bg     $focus  $bg     $dark     $dark
+client.focused_inactive $bg     $dark   $fg     $dark     $dark
+client.unfocused        $bg     $dark   $fg     $dark     $dark
+client.urgent           $bg     $urgent $bg     $dark     $dark
+client.placeholder      $bg     $dark   $fg     $dark     $dark
+client.background               $dark
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+    font pango:DejaVu Sans Mono,FontAwesome 10
+    status_command i3status
+    position top
+    strip_workspace_numbers no
+    separator_symbol "."
+    tray_output none
+    colors {
+        background $bg
+        statusline $fg
+        separator  $bg
+
+        focused_workspace  $focus $focus $bg
+        active_workspace   $bg $bg $fg
+        inactive_workspace $bg $bg $fg
+        urgent_workspace   $urgent $urgent $bg
+        binding_mode       $bg $neutral $bg
+    }
+}
 
 exec --no-startup-id xmodmap ~/.Xmodmap # swap keys {Menu, Super_L}
-exec --no-startup-id "$(set_background)"
+exec --no-startup-id set_background
 exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
