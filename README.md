@@ -1,4 +1,4 @@
-# i3-Desktop
+# i3-desktop
 
 My configs for i3 desktop. \
 Wallpaper edit from [Keiraarts](https://www.behance.net/gallery/10698789/Isometric-Low-Poly-World).
