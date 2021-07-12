@@ -364,3 +364,4 @@ exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
 exec --no-startup-id dunst -lb "$dark" -nb "$dark" -cb "$dark" -lf "$fg" -nf "$fg" -cf "$fg" -lfr "$dark" -nfr "$dark" -cfr "$red"
+exec --no-startup-id xautolock -corners 0-0- -cornersize 10 -time 10 -locker 'lock_system && systemctl suspend'
