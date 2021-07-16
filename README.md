@@ -152,3 +152,6 @@ print mode
 
 ![display mode](screenshots/mode_display.png)
 display mode
+
+![notify mode](screenshots/mode_notify.png)
+notify mode
