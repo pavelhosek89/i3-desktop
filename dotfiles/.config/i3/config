@@ -9,15 +9,15 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-set_from_resource $fg foreground
+set_from_resource $fg white
 set_from_resource $bg background
-set_from_resource $fbg color8
 set_from_resource $dark color0
+set_from_resource $light white
 set_from_resource $red color1
 set_from_resource $green color2
 set_from_resource $blue color4
-set_from_resource $focus color2
-set_from_resource $urgent color10
+set_from_resource $focus color1
+set_from_resource $urgent color1
 set_from_resource $neutral color4
 
 set $mod Mod4
@@ -26,7 +26,7 @@ set $mod Mod4
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:DejaVu Sans Mono 10
+font pango:monospace 10
 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -58,11 +58,11 @@ bindsym $mod+Shift+q kill
 bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14'
+bindsym $mod+d exec dmenu_run -b -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14'"
+bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10'"
 
 # change focus
 bindsym $mod+j focus left
@@ -252,7 +252,7 @@ set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), exi
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$neutral' -sf '$bg' -fn 'DejaVu Sans Mono:pixelsize=14' && systemctl poweroff, mode "default"
+    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
     bindsym s exec --no-startup-id lock_system && systemctl suspend, mode "default"
     bindsym h exec --no-startup-id lock_system && systemctl hibernate, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
@@ -294,16 +294,28 @@ mode "$mode_display" {
 }
 bindsym $mod+p mode "$mode_display"
 
+# Status notification
+set $mode_notify Now playing (m), IP (i), uptime (u), pomodoro (p)
+mode "$mode_notify" {
+    # now playing (mpc)
+    bindsym m exec notify-send "Now Playing ♫" "$(mpc current)", mode "default"
+    # my IP
+    bindsym i exec notify-send "My IP" "$(hostname -I | cut -d' ' -f1)", mode "default"
+    # uptime
+    bindsym u exec notify-send "Uptime" "$(uptime -p)", mode "default"
+    # Pomodoro status
+    bindsym p exec pomodoro status, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+n mode "$mode_notify"
+
 # ncmpcpp (mpd client)
 bindsym $mod+m exec urxvt -name ncmpcpp -e ncmpcpp
 # ranger (file manager)
 bindsym $mod+period exec urxvt -name ranger -e ranger
-# now playing (mpc)
-bindsym Mod1+$mod+m exec notify-send "Now Playing ♫" "$(mpc current)"
-# my IP
-bindsym Mod1+$mod+i exec notify-send "My IP" "$(hostname -I | cut -d' ' -f1)"
-# Pomodoro status
-bindsym Mod1+$mod+p exec pomodoro status
 
 # mpc controls
 bindsym Mod1+$mod+y exec mpc prev
@@ -329,32 +341,32 @@ bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@
 
 # window colors
 # class                 border  bground text    indicator child_border
-client.focused          $bg     $focus  $bg     $dark     $dark
-client.focused_inactive $bg     $dark   $fg     $dark     $dark
-client.unfocused        $bg     $dark   $fg     $dark     $dark
-client.urgent           $bg     $urgent $bg     $dark     $dark
-client.placeholder      $bg     $dark   $fg     $dark     $dark
-client.background               $dark
+client.focused          $focus  $focus  $bg     $focus    $focus
+client.focused_inactive $fg     $fg     $bg     $fg       $fg
+client.unfocused        $fg     $fg     $bg     $fg       $fg
+client.urgent           $urgent $urgent $bg     $fg       $fg
+client.placeholder      $fg     $fg     $bg     $fg       $fg
+client.background               $fg
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    font pango:DejaVu Sans Mono,FontAwesome 10
+    font pango:monospace,FontAwesome 10
     status_command i3status
-    position top
+    position bottom
     strip_workspace_numbers no
     separator_symbol "."
     tray_output none
     colors {
-        background $bg
-        statusline $fg
-        separator  $bg
+        background $fg
+        statusline $bg
+        separator  $fg
 
-        focused_workspace  $focus $focus $bg
-        active_workspace   $bg $bg $fg
-        inactive_workspace $bg $bg $fg
+        focused_workspace  $bg $bg $fg
+        active_workspace   $fg $fg $bg
+        inactive_workspace $fg $fg $bg
         urgent_workspace   $urgent $urgent $bg
-        binding_mode       $bg $neutral $bg
+        binding_mode       $neutral $neutral $fg
     }
 }
 
@@ -363,5 +375,5 @@ exec --no-startup-id set_background
 exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
-exec --no-startup-id dunst -lb "$dark" -nb "$dark" -cb "$dark" -lf "$fg" -nf "$fg" -cf "$fg" -lfr "$dark" -nfr "$dark" -cfr "$red"
+exec --no-startup-id dunst -lb "$fg" -nb "$fg" -cb "$fg" -lf "$bg" -nf "$bg" -cf "$bg" -lfr "$fg" -nfr "$fg" -cfr "$red"
 exec --no-startup-id xautolock -corners 0-0- -cornersize 10 -time 10 -locker 'lock_system && systemctl suspend'

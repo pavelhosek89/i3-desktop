@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 LOCK="/home/$USER/Pictures/lock.png"
 
+# prevention against loud music after login
+mpc -q pause
+pactl set-sink-mute @DEFAULT_SINK@ true
+
 if [ ! -e $LOCK ] ; then
     i3lock -u -t --color=000000
 else

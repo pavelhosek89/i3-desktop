@@ -9,8 +9,8 @@ general {
 
 
 order += "ethernet _first_"
-order += "tztime local"
 order += "volume master"
+order += "tztime local"
 
 
 ethernet _first_ {
@@ -18,17 +18,17 @@ ethernet _first_ {
     format_down = "<span foreground='#d12f2c'></span>"
 }
 
-tztime local {
-    format = "%time"
-    format_time = "%a %d %b, %I:%M %P"
-    timezone = "Europe/Prague"
-    locale = "en_US.UTF-8"
-}
-
 volume master {
-    format = "<span foreground='#000000' background='#819400'>  %volume </span>"
-    format_muted = "<span foreground='#000000' background='#d12f2c'>  sound muted </span>"
+    format = " %volume"
+    format_muted = "<span background='#d12f2c'>  sound muted </span>"
     device = "default"
     mixer = "Master"
     mixer_idx = 0
+}
+
+tztime local {
+    format = "%time "
+    format_time = "%a %d %b, %I:%M %P"
+    timezone = "Europe/Prague"
+    locale = "en_US.UTF-8"
 }
