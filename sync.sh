@@ -55,7 +55,7 @@ fi
 # Check if parameters options  #
 # are given on the commandline #
 ################################
-while getopts ":bhi" opt; do
+while getopts ":uhi" opt; do
     case $opt in
         h)
             display_help  # Call your function
