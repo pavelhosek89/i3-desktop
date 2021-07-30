@@ -252,7 +252,7 @@ set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), exi
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
+    bindsym p exec --no-startup-id echo "OK" | dmenu -b -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
     bindsym s exec --no-startup-id lock_system && systemctl suspend, mode "default"
     bindsym h exec --no-startup-id lock_system && systemctl hibernate, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"

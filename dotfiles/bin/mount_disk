@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-sudo cryptsetup --type luks open /dev/sdc1 encrypted
+sudo cryptsetup --type luks open /dev/sda1 encrypted
 sudo mount -t ext4 /dev/mapper/encrypted /mnt/encrypted
-sudo mount /dev/sdc2 /mnt/disk
+sudo mount /dev/sda2 /mnt/disk
