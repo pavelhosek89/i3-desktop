@@ -6,7 +6,7 @@ Wallpaper edit from [Keiraarts](https://www.behance.net/gallery/10698789/Isometr
 All colors in the system are by Solarized dark (color scheme).
 
 INFO:
-* **distro:** Ubuntu 20.10 "Groovy Gorilla"
+* **distro:** Ubuntu 20.04 "Focal Fossa" | Ubuntu 20.10 "Groovy Gorilla" | Ubuntu 21.04 "Hirsute Hippo"
 * **wm:** i3
 * **bar:** i3status
 * **lock screen:** i3lock
@@ -22,12 +22,19 @@ INFO:
 
 **RUN ON:**
 
-NTB:
+NTB-old:
 * **ntb:** DELL Latitude E7470
 * **cpu:** Intel Core i7-6600U @ 2x 3.4GHz HT
 * **ram:** 2x8GB DDR4 2133MHz
 * **gpu:** Intel(R) HD Graphics 520 (SKL GT2)
 * **disk:** Samsung 970 EVO NVMe M.2 SSD 500 GB
+
+NTB-new
+* **ntb:** Lenovo IdeaPad 5 14ITL05
+* **cpu:** Intel Core i7-1167G7 @ 4x 4.7GHz HT
+* **ram:** 2x8GB DDR4 3200MHz
+* **gpu:** Intel(R) Iris(R) Xe Graphics (TL GT2)
+* **disk:** SK Hynix BC711 NVMe M.2 SSD 512 GB
 
 PC-old:
 * **pc:** Acer Aspire TC-780
@@ -100,11 +107,10 @@ PC-new:
 | Mod1 + Ctrl + delete               | Activate power mode (reboot, shutdown, suspend, hybernate) |
 | Print                              | Activate print mode                                        |
 | $mod + p                           | Activate display mode                                      |
+| $mod + n                           | Activate notification mode                                 |
 | $mod + m                           | ncmpcpp                                                    |
 | $mod + period                      | ranger                                                     |
-| $mod + mod1 + m                    | notification with npc current playing                      |
-| $mod + mod1 + i                    | notification with IP address                               |
-| $mod + mod1 + p                    | notification with pomodoro status                          |
+| $mod + c                           | pavucontrol                                                |
 | $mod + mod1 + y                    | mpc prev                                                   |
 | XF86AudioPrev                      | mpc prev                                                   |
 | $mod + mod1 + x                    | mpc play                                                   |
@@ -114,7 +120,9 @@ PC-new:
 | XF86AudioStop                      | mpc stop                                                   |
 | $mod + mod1 + b                    | mpc next                                                   |
 | XF86AudioNext                      | mpc next                                                   |
-| XF86Calculator                     | xcalc                                                      |
+| XF86MonBrightnessUp                | xbacklight -inc 10                                         |
+| XF86MonBrightnessDown              | xbacklight -dec 10                                         |
+| XF86Calculator                     | urxvt -name calc -e calc                                   |
 | XF86AudioRaiseVolume               | pactl set-sink-volume @DEFAULT_SINK@ +5%                   |
 | XF86AudioLowerVolume               | pactl set-sink-volume @DEFAULT_SINK@ -5%                   |
 | XF86AudioMute                      | pactl set-sink-mute @DEFAULT_SINK@ toggle                  |
@@ -129,7 +137,7 @@ mod1 = Alt key; mod4 = Win key ($mod)
 ![single desktop](screenshots/desktop_single_monitor.png)
 desktop - single monitor
 
-![htop, mc, screenfetch, ranger](screenshots/htop_mc_screenfetch_ranger.png)
+![htop, ranger, screenfetch, \_\_git\_ps1](screenshots/htop_ranger_screenfetch_gitps1.png)
 htop, mc, screenfetch, ranger
 
 ![i3 lock](screenshots/i3lock.png)

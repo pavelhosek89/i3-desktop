@@ -16,7 +16,7 @@ set_from_resource $light white
 set_from_resource $red color1
 set_from_resource $green color2
 set_from_resource $blue color4
-set_from_resource $focus color1
+set_from_resource $focus color4
 set_from_resource $urgent color1
 set_from_resource $neutral color4
 
@@ -58,11 +58,11 @@ bindsym $mod+Shift+q kill
 bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -b -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10'
+bindsym $mod+d exec dmenu_run -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10'"
+bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10'"
 
 # change focus
 bindsym $mod+j focus left
@@ -135,15 +135,15 @@ set $workspace2 "2"
 set $workspace3 "3"
 #files
 set $workspace4 "4"
-#databases
+#office | pdfs
 set $workspace5 "5"
-#documents
-set $workspace6 "6"
-#pdfs
-set $workspace7 "7"
 #images
+set $workspace6 "6"
+#audio
+set $workspace7 "7"
+#video
 set $workspace8 "8"
-#media
+#steam
 set $workspace9 "9"
 #tools
 set $workspace10 "10"
@@ -194,7 +194,6 @@ assign [class="(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|
 for_window [class="(?i)arandr"] floating enable
 for_window [class="(?i)audacious"] floating enable
 for_window [class="(?i)lxappearance"] floating enable
-for_window [class="(?i)pavucontrol"] floating enable
 for_window [class="(?i)skypeforlinux"] floating enable
 for_window [class="(?i)xcalc"] floating enable
 for_window [class="^URxvt$" instance="^calc"] floating enable
@@ -211,6 +210,7 @@ for_window [class="(?i)mplayer"] focus
 for_window [class="(?i)xcalc"] focus
 for_window [class="(?i)pavucontrol"] focus
 for_window [class="(?i)mupdf"] focus
+for_window [class="(?i)blueman-manager"] focus
 for_window [class="^URxvt$" instance="^calc"] focus
 
 # reload the configuration file
@@ -252,7 +252,7 @@ set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), exi
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -b -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$fg' -nb '$bg' -sb '$focus' -sf '$bg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
+    bindsym p exec --no-startup-id echo "OK" | dmenu -b -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
     bindsym s exec --no-startup-id lock_system && systemctl suspend, mode "default"
     bindsym h exec --no-startup-id lock_system && systemctl hibernate, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
@@ -267,10 +267,10 @@ bindsym Control+Mod1+Delete mode "$mode_power"
 set $mode_print Get screenshot fullscreen (f), windows (w), delay fullscreen (d), delay window (c)
 mode "$mode_print" {
     # binding for get screenshot
-    bindsym f exec scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/', mode "default"
-    bindsym w exec scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/', mode "default"
-    bindsym d exec scrot -d 5 '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/', mode "default"
-    bindsym c exec scrot -d 5 -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/', mode "default"
+    bindsym f exec scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot taken", mode "default"
+    bindsym w exec scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot for window taken", mode "default"
+    bindsym d exec scrot -d 5 '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot taken", mode "default"
+    bindsym c exec scrot -d 5 -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot for window taken", mode "default"
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
@@ -282,10 +282,10 @@ bindsym Print mode "$mode_print"
 set $mode_display Change display to laptop (l), dual-top (t), dual-right (r), DP (d), manual (m)
 mode "$mode_display" {
     # binding for get screenshot
-    bindsym l exec xrandr --output eDP-1 --mode 1920x1080 --output DP-1-1 --off, mode "default"
-    bindsym t exec xrandr --output eDP-1 --mode 1920x1080 --auto --pos 0x1080 --output DP-1-1 --mode 1920x1080 --auto --pos 0x0, mode "default"
-    bindsym r exec xrandr --output eDP-1 --mode 1920x1080 --left-of DP-1-1, mode "default"
-    bindsym d exec xrandr --output eDP-1 --off --output DP-1-1 --mode 1920x1080, mode "default"
+    bindsym l exec xrandr --output eDP1 --mode 1920x1080 --output HDMI1 --off, mode "default"
+    bindsym t exec xrandr --output eDP1 --mode 1920x1080 --auto --pos 0x1080 --output HDMI1 --mode 1920x1080 --auto --pos 0x0, mode "default"
+    bindsym r exec xrandr --output eDP1 --mode 1920x1080 --left-of HDMI1, mode "default"
+    bindsym d exec xrandr --output eDP1 --off --output HDMI1 --mode 1920x1080, mode "default"
     bindsym m exec arandr, mode "default"
 
     # back to normal: Enter or Escape
@@ -316,6 +316,9 @@ bindsym $mod+n mode "$mode_notify"
 bindsym $mod+m exec urxvt -name ncmpcpp -e ncmpcpp
 # ranger (file manager)
 bindsym $mod+period exec urxvt -name ranger -e ranger
+# pavucontrol (PulseAudio Volume Control)
+bindsym $mod+c exec pavucontrol
+
 
 # mpc controls
 bindsym Mod1+$mod+y exec mpc prev
@@ -328,8 +331,12 @@ bindsym XF86AudioStop exec mpc stop
 bindsym Mod1+$mod+b exec mpc next
 bindsym XF86AudioNext exec mpc next
 
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec xbacklight -inc 10
+bindsym XF86MonBrightnessDown exec xbacklight -dec 10
+
 # Calculator (xcalc)
-bindsym XF86Calculator exec xcalc
+bindsym XF86Calculator exec urxvt -name calc -e calc
 
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% # increase sound volume
@@ -341,7 +348,7 @@ bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@
 
 # window colors
 # class                 border  bground text    indicator child_border
-client.focused          $focus  $focus  $bg     $focus    $focus
+client.focused          $focus  $focus  $fg     $focus    $focus
 client.focused_inactive $fg     $fg     $bg     $fg       $fg
 client.unfocused        $fg     $fg     $bg     $fg       $fg
 client.urgent           $urgent $urgent $bg     $fg       $fg
@@ -362,18 +369,16 @@ bar {
         statusline $bg
         separator  $fg
 
-        focused_workspace  $bg $bg $fg
+        focused_workspace  $focus $focus $fg
         active_workspace   $fg $fg $bg
         inactive_workspace $fg $fg $bg
-        urgent_workspace   $urgent $urgent $bg
+        urgent_workspace   $urgent $urgent $fg
         binding_mode       $neutral $neutral $fg
     }
 }
 
 exec --no-startup-id xmodmap ~/.Xmodmap # swap keys {Menu, Super_L}
 exec --no-startup-id set_background
-exec --no-startup-id redshift -c ~/.config/redshift/config
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
-exec --no-startup-id dunst -lb "$fg" -nb "$fg" -cb "$fg" -lf "$bg" -nf "$bg" -cf "$bg" -lfr "$fg" -nfr "$fg" -cfr "$red"
-exec --no-startup-id xautolock -corners 0-0- -cornersize 10 -time 10 -locker 'lock_system && systemctl suspend'
+exec --no-startup-id dunst -lb "$fg" -nb "$fg" -cb "$fg" -lf "$bg" -nf "$bg" -cf "$red" -lfr "$fg" -nfr "$fg" -cfr "$fg"

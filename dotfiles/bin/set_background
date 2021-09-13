@@ -2,7 +2,7 @@
 WALLPAPER="/home/$USER/Pictures/wallpaper.png"
 
 if [ ! -e $WALLPAPER ] ; then
-    xsetroot -solid "#000000"
+    xsetroot -solid "#808080"
 else
     feh --bg-scale $WALLPAPER
 fi

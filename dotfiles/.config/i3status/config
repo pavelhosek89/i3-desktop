@@ -8,19 +8,36 @@ general {
 }
 
 
+order += "wireless _first_"
 order += "ethernet _first_"
 order += "volume master"
+order += "battery all"
 order += "tztime local"
 
 
+wireless _first_ {
+    format_up = ""
+    format_down = ""
+}
+
 ethernet _first_ {
-    format_up = ""
-    format_down = "<span foreground='#d12f2c'></span>"
+    format_up = ""
+    format_down = ""
+}
+
+battery all {
+    format = "%status %percentage"
+    format_down = ""
+    status_chr = ""
+    status_bat = ""
+    status_unk = ""
+    status_full = ""
+    integer_battery_capacity = true
 }
 
 volume master {
     format = " %volume"
-    format_muted = "<span background='#d12f2c'>  sound muted </span>"
+    format_muted = ""
     device = "default"
     mixer = "Master"
     mixer_idx = 0
