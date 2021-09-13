@@ -138,7 +138,7 @@ mod1 = Alt key; mod4 = Win key ($mod)
 desktop - single monitor
 
 ![htop, ranger, screenfetch, \_\_git\_ps1](screenshots/htop_ranger_screenfetch_gitps1.png)
-htop, mc, screenfetch, ranger
+htop, ranger, screenfetch, __git_ps1
 
 ![i3 lock](screenshots/i3lock.png)
 i3lock
