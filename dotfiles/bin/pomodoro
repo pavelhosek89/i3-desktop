@@ -12,12 +12,15 @@ __base="$(basename ${__file})"
 __root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
 
 readonly RENDEZVOUS=/dev/shm/pomodoro
-HOURS=8        # (45 min * 10) + (8 * 5) + 30
-POMODOROS=10   # 8h 10m work
+POMODOROS=10    # 8h 10m work (45m*10+5m*8)  !! even number 
 POMODORO=2700   # 45 min
 SHORT=300       # 5 min
-LONG=1800       # 30 min (lunch)
+LONG=1800       # 30 min
 TYPE="w"        # w - working, s - short, l - long
+MPD_PAUSE="e"   # d - disable mpd pause, e - enable mpd pause
+INPUT_DEV="d"   # d - disable input device, e - enable input device
+LOCK_SCRN="d"   # d - disable lock screen, e - enable lock screen
+
 TIME=$(($POMODORO/60))   # time to end pomodoro or short break or long break
 declare -a SHM_POMODORO
 
@@ -95,15 +98,30 @@ pstop() {
 }
 
 break_sleep() {
-    MPC_STATUS="stop"
-    # If mpd is playing
-    if mpc status | grep playing > /dev/null
-    then
-        mpc pause
-        MPC_STATUS="play"
-    fi
+    MPD_STATUS="stop"
+    INPUT_STATUS="enable"
+    LOCK_STATUS="unlock"
     if [[ $1 == $SHORT ]]
     then
+        # if mpd is playing and enable mpd pause
+        if mpc status | grep playing > /dev/null && [[ $MPD_PAUSE == "e" ]]
+        then
+            mpc pause
+            MPD_STATUS="play"
+        fi
+        # if disable input device
+        if [[ $INPUT_DEV == "d" ]]
+        then
+            INPUTS=($(xinput list | grep -v -i virtual | awk -F"=" '{ print $2 }' | awk '{print $1}' | sort -hr | tr "\n" " "))
+            for i in "${INPUTS[@]}"; do xinput --disable $i; done
+            INPUT_STATUS="disable"
+        fi
+        # lock screen if enabled
+        if [[ $LOCK_SCRN == "e" ]]
+        then
+            ~/bin/lock_system
+            LOCK_STATUS="lock"
+        fi
         SHM_POMODORO[7]="s"
     else
         SHM_POMODORO[7]="l"
@@ -115,9 +133,18 @@ break_sleep() {
         echo "${SHM_POMODORO[@]}" > $RENDEZVOUS
         sleep 60
     done
-    if [[ $MPC_STATUS == "play" ]]
+    if [[ $MPD_STATUS == "play" ]]
     then
         mpc play
+    fi
+    if [[ $INPUT_STATUS == "disable" ]]
+    then
+        INPUTS=($(xinput list | grep -v -i virtual | awk -F"=" '{ print $2 }' | awk '{print $1}' | sort -hr | tr "\n" " "))
+        for i in "${INPUTS[@]}"; do xinput --enable $i; done
+    fi
+    if [[ $LOCK_STATUS == "lock" ]]
+    then
+        killall i3lock
     fi
 }
 
@@ -136,7 +163,7 @@ pomodoro_sleep() {
 }
 
 notify_send() {
-    notify-send -u critical "$1" "$2"
+    notify-send -u normal "$1" "$2"
 }
 
 pomodoro() {
@@ -146,21 +173,19 @@ pomodoro() {
     do
         pomodoro_cicle=$(($pomodoro_cicle+1))
         notify_send "Pomodoro n°$c !" "Working !"
-        #notify-send "Pomodoro Counter" "Time for Pomodoro #$c, work!"
         pomodoro_sleep $POMODORO $c
         if [[ $c != $POMODOROS ]]; then
-            if [[ "$pomodoro_cicle" = 5 ]]; then
+            if [[ "$pomodoro_cicle" = $(($POMODOROS/2)) ]]; then
                 notify_send "Good job, long break time !" ""
                 pomodoro_cicle=0
-                break_sleep $LONG # long break of 10 min
+                break_sleep $LONG # long break of 30 min
             else
                 notify_send "Break time n°$c!" ""
                 break_sleep $SHORT # short break of 5 min 
             fi
         fi
     done
-    notify_send "Pomodoro" "No more pomodoros left! You worked for $HOURS hours."
-    #notify-send "Pomodoro Counter" "No more pomodoros left!"
+    notify_send "Pomodoro" "No more pomodoros left!"
 }
 
 #########################
@@ -171,10 +196,13 @@ display_help() {
     echo
     echo "   -h                     print this help message"
     echo
-    echo "   -c [count]             set number of pomodoros [10x]"
-    echo "   -l [min]               set time for long pause [30 min]"
-    echo "   -p [min]               set time for pomodoro [45 min]"
-    echo "   -s [min]               set time for short pause [5 min]"
+    echo "   -c [count]             set number of pomodoros [${POMODOROS}x]"
+    echo "   -l [min]               set time for long pause [$(($LONG/60)) min]"
+    echo "   -p [min]               set time for pomodoro [$(($POMODORO/60)) min]"
+    echo "   -s [min]               set time for short pause [$(($SHORT/60)) min]"
+    echo "   -m [d|e]               disable|enable pause mpd during breake"
+    echo "   -i [d|e]               disable|enable imput devices during breake"
+    echo "   -o [d|e]               disable|enable lock screen during breake"
     echo
     # echo some stuff here for the -a or --add-options
     exit 1
@@ -186,7 +214,7 @@ display_help() {
 # Check if parameters options  #
 # are given on the commandline #
 ################################
-while getopts ":c:l:p:s:h" opt; do
+while getopts ":c:l:p:s:m:i:o:h" opt; do
     case $opt in
         h)
             display_help  # Call your function
@@ -203,6 +231,25 @@ while getopts ":c:l:p:s:h" opt; do
             ;;
         s)
             SHORT=$(($OPTARG*60))
+            ;;
+
+        m)
+            if [[ $OPTARG == "disable" ]] || [[ $OPTARG == "d" ]]
+            then
+                MPD_PAUSE="d"
+            fi
+            ;;
+        i)
+            if [[ $OPTARG == "enable" ]] || [[ $OPTARG == "e" ]]
+            then
+                INPUT_DEV="e"
+            fi
+            ;;
+        o)
+            if [[ $OPTARG == "enable" ]] || [[ $OPTARG == "e" ]]
+            then
+                LOCK_SCRN="e"
+            fi
             ;;
 
         \?)

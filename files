@@ -5,7 +5,6 @@
 .config/i3/config
 .config/i3status/config
 .config/mc/ini
-.config/redshift.conf
 .mplayer/config
 .ncmpcpp/config
 .profile

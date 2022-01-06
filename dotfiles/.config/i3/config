@@ -188,7 +188,7 @@ assign [class="^URxvt$" instance="^ncmpcpp$"] → $workspace7
 assign [class="(?i)mplayer"] → $workspace8
 assign [class="(?i)steam"] → $workspace9
 assign [class="(?i)minecraft .*"] → $workspace9
-assign [class="(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager"] → $workspace10
+assign [class="(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager|(?i)blueman-manager"] → $workspace10
 
 # floating
 for_window [class="(?i)arandr"] floating enable
@@ -279,13 +279,14 @@ mode "$mode_print" {
 bindsym Print mode "$mode_print"
 
 # Display controls
-set $mode_display Change display to laptop (l), dual-top (t), dual-right (r), DP (d), manual (m)
+set $mode_display Change display to eDP (e), dual-left (l), dual-top (t), dual-right (r), DP (d), manual (m)
 mode "$mode_display" {
     # binding for get screenshot
-    bindsym l exec xrandr --output eDP1 --mode 1920x1080 --output HDMI1 --off, mode "default"
-    bindsym t exec xrandr --output eDP1 --mode 1920x1080 --auto --pos 0x1080 --output HDMI1 --mode 1920x1080 --auto --pos 0x0, mode "default"
-    bindsym r exec xrandr --output eDP1 --mode 1920x1080 --left-of HDMI1, mode "default"
-    bindsym d exec xrandr --output eDP1 --off --output HDMI1 --mode 1920x1080, mode "default"
+    bindsym e exec xrandr --output eDP1 --mode 1920x1080 --output DP1 --off, mode "default"
+    bindsym l exec xrandr --output eDP1 --mode 1920x1080 --right-of DP1, mode "default"
+    bindsym t exec xrandr --output eDP1 --mode 1920x1080 --auto --pos 0x1080 --output DP1 --mode 1920x1080 --auto --pos 0x0, mode "default"
+    bindsym r exec xrandr --output eDP1 --mode 1920x1080 --left-of DP1, mode "default"
+    bindsym d exec xrandr --output eDP1 --off --output DP1 --mode 1920x1080, mode "default"
     bindsym m exec arandr, mode "default"
 
     # back to normal: Enter or Escape

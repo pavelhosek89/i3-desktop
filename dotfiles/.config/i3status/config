@@ -10,6 +10,7 @@ general {
 
 order += "wireless _first_"
 order += "ethernet _first_"
+order += "run_watch pomodoro"
 order += "volume master"
 order += "battery all"
 order += "tztime local"
@@ -22,6 +23,12 @@ wireless _first_ {
 
 ethernet _first_ {
     format_up = ""
+    format_down = ""
+}
+
+run_watch pomodoro {
+    pidfile = "/tmp/own_pomodoro.pid"
+    format = ""
     format_down = ""
 }
 

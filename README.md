@@ -29,7 +29,7 @@ NTB-old:
 * **gpu:** Intel(R) HD Graphics 520 (SKL GT2)
 * **disk:** Samsung 970 EVO NVMe M.2 SSD 500 GB
 
-NTB-new
+NTB-new (currently in use)
 * **ntb:** Lenovo IdeaPad 5 14ITL05
 * **cpu:** Intel Core i7-1167G7 @ 4x 4.7GHz HT
 * **ram:** 2x8GB DDR4 3200MHz

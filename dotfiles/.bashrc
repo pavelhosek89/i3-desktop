@@ -33,6 +33,8 @@ alias mv='mv -i'
 # -> Prevents accidentally clobbering files.
 alias mkdir='mkdir -p'
 alias which='type -a'
+# print calendar with previous, current, next month and week start on Mondey
+alias cal='ncal -3M'
 
 # Extracting
 extract () {
