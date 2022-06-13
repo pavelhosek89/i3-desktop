@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+pkill parec
+pactl set-source-mute @DEFAULT_SOURCE@ true

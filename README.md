@@ -6,7 +6,7 @@ Wallpaper edit from [Keiraarts](https://www.behance.net/gallery/10698789/Isometr
 All colors in the system are by Solarized dark (color scheme).
 
 INFO:
-* **distro:** Ubuntu 20.04 "Focal Fossa" | Ubuntu 20.10 "Groovy Gorilla" | Ubuntu 21.04 "Hirsute Hippo"
+* **distro:** Ubuntu 20.04 "Focal Fossa" | Ubuntu 20.10 "Groovy Gorilla" | Ubuntu 21.04 "Hirsute Hippo" | Ubuntu 22.04 "Jammy Jellyfish"
 * **wm:** i3
 * **bar:** i3status
 * **lock screen:** i3lock
@@ -16,7 +16,6 @@ INFO:
 * **file manager:** ranger, mc
 * **editor:** vim, Sublime Text 3
 * **app launcher:** dmenu
-* **gtk theme:** arc-theme
 * **image viewer:** feh
 * **notification:** dunst
 
@@ -36,6 +35,14 @@ NTB-new (currently in use)
 * **gpu:** Intel(R) Iris(R) Xe Graphics (TL GT2)
 * **disk:** SK Hynix BC711 NVMe M.2 SSD 512 GB
 
+NTB-work (currently in use)
+* **ntb:** Lenovo Latitude 5421
+* **cpu:** Intel Core i5-11500H @ 6x 4.6GHz HT
+* **ram:** 2x8GB DDR4 3200MHz
+* **gpu:** Intel(R) UHD Graphics (TL GT1)
+* **gpu:** NVIDIA GeForce MX 450
+* **disk:** Kingston SA2000M8500G NVMe M.2 SSD 500 GB
+
 PC-old:
 * **pc:** Acer Aspire TC-780
 * **cpu:** Intel Core i5-7400 @ 4x 3.5GHz
@@ -54,23 +61,24 @@ PC-new:
 
 
 ## Dependencies
+### Fonts
+
+* `Font Awesome 6`
+
 ### Ubuntu
 
+* `acpid`
 * `arandr`
-* `arc-theme`
 * `dmenu`
 * `dunst`
 * `feh`
 * `ffmpeg`
-* `fonts-font-awesome`
 * `i3`
 * `i3lock`
 * `i3status`
 * `libnotify-bin`
 * `scrot`
 * `urxvt` set as default terminal
-* `yaru-theme-icon`
-
 
 ## Shortcuts
 
@@ -107,7 +115,6 @@ PC-new:
 | Mod1 + Ctrl + delete               | Activate power mode (reboot, shutdown, suspend, hybernate) |
 | Print                              | Activate print mode                                        |
 | $mod + p                           | Activate display mode                                      |
-| $mod + n                           | Activate notification mode                                 |
 | $mod + m                           | ncmpcpp                                                    |
 | $mod + period                      | ranger                                                     |
 | $mod + c                           | pavucontrol                                                |
@@ -126,22 +133,41 @@ PC-new:
 | XF86AudioRaiseVolume               | pactl set-sink-volume @DEFAULT_SINK@ +5%                   |
 | XF86AudioLowerVolume               | pactl set-sink-volume @DEFAULT_SINK@ -5%                   |
 | XF86AudioMute                      | pactl set-sink-mute @DEFAULT_SINK@ toggle                  |
+| XF86AudioMicMute                   | pactl set-source-mute @DEFAULT_SOURCE@ toggle              |
 | $mod+KP_Add                        | pactl set-sink-volume @DEFAULT_SINK@ +5%                   |
 | $mod+KP_Subtract                   | pactl set-sink-volume @DEFAULT_SINK@ -5%                   |
 | $mod+KP_Multiply                   | pactl set-sink-mute @DEFAULT_SINK@ toggle                  |
+| $mod+i                             | pactl set-source-mute @DEFAULT_SOURCE@ toggle              |
 
 mod1 = Alt key; mod4 = Win key ($mod)
 
+## Scripts
+
+* `background-set` - background settings
+* `battery-notify` - send a notification when the battery is low
+* `disk-mount` - mount encryption disk
+* `disk-umount` - umount encryption disk
+* `displays-rearrange` - rearrange displays when lid close or connect hdmi
+* `health-notify` - send a notification to you stand-up and drink water
+* `mic-rec-start` - start recording from the screen
+* `mic-rec-stop` - stops recording from the screen
+* `mpd-notify` - send a notification when the song changed
+* `screen-rec-start - starts recording from the screen
+* `screen-rec-stop` - stops recording from the screen
+* `system-lock` - lock system
 
 ## Screenshots
 ![single desktop](screenshots/desktop_single_monitor.png)
 desktop - single monitor
 
+![i3 lock](screenshots/i3lock.png)
+i3lock
+
 ![htop, ranger, screenfetch, \_\_git\_ps1](screenshots/htop_ranger_screenfetch_gitps1.png)
 htop, ranger, screenfetch, __git_ps1
 
-![i3 lock](screenshots/i3lock.png)
-i3lock
+![gimp](screenshots/gimp.png)
+gimp
 
 ![notification](screenshots/notification.png)
 dunst (notification)
@@ -160,6 +186,3 @@ print mode
 
 ![display mode](screenshots/mode_display.png)
 display mode
-
-![notify mode](screenshots/mode_notify.png)
-notify mode

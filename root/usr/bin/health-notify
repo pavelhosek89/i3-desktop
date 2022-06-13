@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+
+for (( c=1; c<=32; c++ )) # loop for 24h (32*45min)
+do
+    sleep 2700
+    notify-send "Health" "Go for a walk and a drink water"
+    if [[ $c == 12 ]]; then
+        notify-send -u critical "Health" "You've been sitting at the computer for nine hours"
+    fi
+done
+

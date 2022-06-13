@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+pactl set-source-mute @DEFAULT_SOURCE@ false
+parec -d @DEFAULT_SOURCE@ --file-format=flac ~/Music/record.flac

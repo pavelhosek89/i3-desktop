@@ -321,7 +321,7 @@ song_columns_list_format = (25)[cyan]{a} (40)[]{f} (30)[red]{b} (7f)[green]{l}
 ## Note: Custom command that will be executed each time song changes. Useful for
 ## notifications etc.
 ##
-execute_on_song_change = "~/bin/mpdnotify"
+execute_on_song_change = "/usr/bin/mpd-notify"
 #
 ##
 ## Note: Custom command that will be executed each time player state

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+NOTIFY="/usr/bin/notify-send -u"
+
+display_help() {
+    echo "Usage: $0 [option...]" >&2
+    echo
+    echo "   -c                     battery level is CRITICAL"
+    echo "   -h                     print this help message"
+    echo "   -l                     battery level is low"
+    echo "   -p                     charging cable is now plugged"
+    echo "   -u                     charging cable has been unplugged"
+    echo
+    exit 1
+}
+
+notify_send() {
+    if [[ "$EUID" == 0 ]]; then
+        user="$(w -h | grep tty | head -n1 | awk '{print $1}')"
+        DISPLAY=:0.0 su $user -c "$NOTIFY"
+    else
+        eval $NOTIFY
+    fi
+}
+
+# START SCRIPT
+
+if [[ $# -eq 0 ]] ; then
+    display_help
+    exit 1
+fi
+
+user="$(w -h | grep tty | head -n1 | awk '{print $1}')"
+
+while getopts ":c:hl:pu" opt; do
+    case $opt in
+        c)
+            NOTIFY=$(echo "$NOTIFY critical \"Battery status\" \"Battery level is CRITICAL at ${OPTARG}%\"")
+            notify_send
+            exit 0
+            ;;
+        h)
+            display_help
+            exit 0
+            ;;
+        l)
+            NOTIFY=$(echo "$NOTIFY normal \"Battery status\" \"Battery is getting low at ${OPTARG}%\"")
+            notify_send 
+            exit 0
+            ;;
+        p)
+            NOTIFY=$(echo "$NOTIFY low \"Battery status\" \"Charging cable is now plugged.\"")
+            notify_send 
+            exit 0
+            ;;
+        u)
+            NOTIFY=$(echo "$NOTIFY low \"Battery status\" \"Charging cable has been unplugged.\"")
+            notify_send 
+            exit 0
+            ;;
+        \?)
+            display_help
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))

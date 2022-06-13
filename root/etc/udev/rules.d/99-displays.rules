@@ -1,0 +1,1 @@
+SUBSYSTEM=="drm", ACTION=="change", DEVTYPE= RUN+="/usr/bin/displays-rearrange"

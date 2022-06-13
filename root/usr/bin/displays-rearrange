@@ -1,0 +1,196 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+declare -a PORTS
+if [[ "$EUID" == 0 ]]; then
+    user="$(w -h | grep tty | head -n1 | awk '{print $1}')"
+    read -a PORTS <<< $(DISPLAY=:0.0 su $user -c 'xrandr' | grep -i -A 1 ' connected' --no-group-separator | awk '{print $1}' | tr -s '\n' ' ')
+else
+    read -a PORTS <<< $(xrandr | grep -i -A 1 ' connected' --no-group-separator | awk '{print $1}' | tr -s '\n' ' ')
+fi
+
+FIRST='false'
+LAPTOP_DISPLAY='eDP'
+LID=$(cat /proc/acpi/button/lid/*/state | sed 's/state://' | tr -d '[:space:]')
+XRANDR='/usr/bin/xrandr --output '
+
+display_help() {
+    echo "Usage: $0 [option...]" >&2
+    echo
+    echo "   -d                     duplicate"
+    echo "   -e                     extend"
+    echo "   -h                     print this help message"
+    echo "   -l                     laptop screen only"
+    echo "   -s                     second screen only"
+    echo
+    exit 1
+}
+
+duplicate() {
+    for i in "${!PORTS[@]}"; do
+        if [[ $((i%2)) == 1 ]]; then
+            continue
+        fi
+        if [[ $FIRST == 'false' ]]; then
+            if [[ $LID == 'open' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --primary")
+            elif [[ $LID == 'closed' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            else
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --primary")
+            fi
+            FIRST='true'
+            LAST=${PORTS[$i]}
+        else
+            if [[ $LID == 'open' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --same-as $LAST")
+            elif [[ $LID == 'closed' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            else
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --same-as $LAST")
+            fi
+            LAST=${PORTS[$i]}
+        fi
+    done
+}
+
+extend() {
+    for i in "${!PORTS[@]}"; do
+        if [[ $((i%2)) == 1 ]]; then
+            continue
+        fi
+        if [ $FIRST == 'false' ]; then
+            if [[ $LID == 'open' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --primary")
+            elif [[ $LID == 'closed' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            else
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --primary")
+            fi
+            FIRST='true'
+            LAST=${PORTS[$i]}
+        else
+            if [[ $LID == 'open' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --right-of $LAST")
+            elif [[ $LID == 'closed' ]] && [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            else
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --right-of $LAST")
+            fi
+            LAST=${PORTS[$i]}
+        fi
+    done
+}
+
+laptop() {
+    for i in "${!PORTS[@]}"; do
+        if [[ $((i%2)) == 1 ]]; then
+            continue
+        fi
+        if [[ $FIRST == 'false' ]]; then
+            if [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --auto")
+            else
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            fi
+            FIRST='true'
+        else
+            if [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --auto")
+            else
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --off")
+            fi
+            LAST=${PORTS[$i]}
+        fi
+    done
+}
+
+second() {
+    for i in "${!PORTS[@]}"; do
+        if [[ $((i%2)) == 1 ]]; then
+            continue
+        fi
+        if [[ $FIRST == 'false' ]]; then
+            if [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --off")
+            fi
+            if [[ ${PORTS[$i]} != *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR${PORTS[$i]} --mode ${PORTS[$((i+1))]} --primary")
+            fi
+            FIRST='true'
+            LAST=${PORTS[$i]}
+        else
+            if [[ ${PORTS[$i]} == *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --off")
+            fi
+            if [[ ${PORTS[$i]} != *"$LAPTOP_DISPLAY"* ]]; then
+                XRANDR=$(echo "$XRANDR --output ${PORTS[$i]} --mode ${PORTS[$((i+1))]} --right-of $LAST")
+            fi
+            LAST=${PORTS[$i]}
+        fi
+    done
+}
+
+xrandr_setup() {
+    if [[ "$EUID" == 0 ]]; then
+        user="$(w -h | grep tty | head -n1 | awk '{print $1}')"
+        DISPLAY=:0.0 su $user -c "$XRANDR"
+    else
+        eval $XRANDR
+    fi
+}
+
+# START SCRIPT
+
+if [[ $# -ge 2 ]] ; then
+    display_help
+    exit 1
+fi
+
+if [[ $# -ne 1 ]] ; then
+    extend
+    xrandr_setup
+    exit 0
+fi
+
+while getopts ":dehls" opt; do
+    case $opt in
+        d)
+            duplicate
+            xrandr_setup
+            exit 0
+            ;;
+        e)
+            extend
+            xrandr_setup
+            exit 0
+            ;;
+        h)
+            display_help
+            exit 0
+            ;;
+        l)
+            laptop
+            xrandr_setup
+            exit 0
+            ;;
+        s)
+            second
+            xrandr_setup
+            exit 0
+            ;;
+        \?)
+            display_help
+            exit 0
+            ;;
+        :)
+            echo "Option -$OPTARG requires an argument." >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))

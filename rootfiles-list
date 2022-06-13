@@ -1,0 +1,15 @@
+/etc/acpi/events/lid
+/etc/udev/rules.d/99-battery.rules
+/etc/udev/rules.d/99-displays.rules
+/usr/bin/background-set
+/usr/bin/battery-notify
+/usr/bin/disk-mount
+/usr/bin/disk-umount
+/usr/bin/displays-rearrange
+/usr/bin/health-notify
+/usr/bin/mic-rec-start
+/usr/bin/mic-rec-stop
+/usr/bin/mpd-notify
+/usr/bin/screen-rec-start
+/usr/bin/screen-rec-stop
+/usr/bin/system-lock

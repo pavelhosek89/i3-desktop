@@ -12,13 +12,13 @@ PS1='\[\e[34m\]\u\[\e[97m\]\[\e[1m\] in \[\e[31m\]\w\[\e[0m\]$(__git_ps1 " \[\e[
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-HISTSIZE=16384
-HISTFILESIZE=65536
+HISTSIZE=524288
+HISTFILESIZE=524288
 
 #disable duplicate entries in .bash_history
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:erasedups
 #ignore commands
-HISTIGNORE="ll:ls:ls *:history:pwd:htop:pwqgen:pwqgen *:feh:pass:pass *:ranger:mount_disk:umount_disk:screenfetch:uptime:ip a"
+HISTIGNORE="ll:ls:ls *:history:pwd:htop:pwqgen:pwqgen *:feh:pass:pass *:ranger:mount_disk:umount_disk:screenfetch:uptime:ip a:* --help"
 #append to history, don't overwrite it
 shopt -s histappend
 

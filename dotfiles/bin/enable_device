@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-INPUTS=($(xinput list | grep -v -i virtual | awk -F"=" '{ print $2 }' | awk '{print $1}' | sort -hr | tr "\n" " "))
-for i in "${INPUTS[@]}"; do xinput --enable $i; done

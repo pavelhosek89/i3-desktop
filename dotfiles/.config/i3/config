@@ -26,7 +26,7 @@ set $mod Mod4
 # is used in the bar {} block below.
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
-font pango:monospace 10
+font pango:DejaVu Sans Mono 10
 
 # Before i3 v4.8, we used to recommend this one as the default:
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
@@ -58,11 +58,11 @@ bindsym $mod+Shift+q kill
 bindsym --release button2 kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10'
+bindsym $mod+d exec dmenu_run -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'DejaVu Sans Mono:size=10'
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10'"
+bindsym control+$mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -b -i -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'DejaVu Sans Mono:size=10'"
 
 # change focus
 bindsym $mod+j focus left
@@ -129,7 +129,7 @@ bindsym $mod+a focus parent
 
 #terminals
 set $workspace1 "1"
-#web
+#web | #chat
 set $workspace2 "2"
 #code
 set $workspace3 "3"
@@ -186,32 +186,26 @@ assign [class="(?i)gimp|(?i)inkscape|(?i)darktable|(?i)feh|(?i)shotwell"] → $w
 assign [class="(?i)audacious|(?i)picard"] → $workspace7
 assign [class="^URxvt$" instance="^ncmpcpp$"] → $workspace7
 assign [class="(?i)mplayer"] → $workspace8
-assign [class="(?i)steam"] → $workspace9
 assign [class="(?i)minecraft .*"] → $workspace9
+assign [class="(?i)steam"] → $workspace9
 assign [class="(?i)gnome-control-center|(?i)arandr|(?i)seahorse|(?i)pavucontrol|(?i)virtualbox|(?i)gparted|(?i)gnome-disks|(?i)gnome-boxes|(?i)lxappearance|(?i)virt-manager|(?i)blueman-manager"] → $workspace10
 
-# floating
-for_window [class="(?i)arandr"] floating enable
+# Open specific applications
+for_window [class="(?i)arandr"] floating enable focus
 for_window [class="(?i)audacious"] floating enable
-for_window [class="(?i)lxappearance"] floating enable
-for_window [class="(?i)skypeforlinux"] floating enable
-for_window [class="(?i)xcalc"] floating enable
-for_window [class="^URxvt$" instance="^calc"] floating enable
-for_window [title="^Minecraft .*"] floating enable
-# kill window
-for_window [title="Steam - Update News"] kill
-
-# focus on launch
-for_window [class="(?i)arandr"] focus
-for_window [class="(?i)nautilus"] focus
-for_window [class="(?i)xterm|(?i)gnome-terminal|(?i)urxvt"] focus
-for_window [class="(?i)feh"] focus
-for_window [class="(?i)mplayer"] focus
-for_window [class="(?i)xcalc"] focus
-for_window [class="(?i)pavucontrol"] focus
-for_window [class="(?i)mupdf"] focus
 for_window [class="(?i)blueman-manager"] focus
-for_window [class="^URxvt$" instance="^calc"] focus
+for_window [class="(?i)feh"] focus
+for_window [class="(?i)lxappearance"] floating enable
+for_window [class="(?i)mplayer"] focus
+for_window [class="(?i)mupdf"] focus
+for_window [class="(?i)nautilus"] focus
+for_window [class="(?i)pavucontrol"] focus
+for_window [class="(?i)skypeforlinux"] floating enable
+for_window [class="(?i)xcalc"] floating enable sticky focus
+for_window [class="(?i)xterm|(?i)gnome-terminal|(?i)urxvt"] focus
+for_window [class="^URxvt$" instance="^calc"] floating enable sticky focus
+for_window [title="Steam - Update News"] kill
+for_window [title="^Minecraft .*"] floating enable
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -232,31 +226,28 @@ mode "resize" {
     bindsym k resize grow height 10 px or 10 ppt
     bindsym l resize shrink height 10 px or 10 ppt
     bindsym uring resize grow width 10 px or 10 ppt
-
     # same bindings, but for the arrow keys
     bindsym Left resize shrink width 10 px or 10 ppt
     bindsym Down resize grow height 10 px or 10 ppt
     bindsym Up resize shrink height 10 px or 10 ppt
     bindsym Right resize grow width 10 px or 10 ppt
-
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
 
-bindsym Control+Mod1+l exec lock_system
+bindsym Control+Mod1+l exec system-lock
 
 # Controls for shutdown, reboot atc.
-set $mode_power System reboot (r), shutdown (p), suspend (s), hibernate (h), exit i3 (e)
+set $mode_power System (r)eboot, (s)hutdown, s(u)spend, (h)ibernate, (e)xit i3
 mode "$mode_power" {
     # bindings for the suspend, hibernate, reboot, shutdown
     bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym p exec --no-startup-id echo "OK" | dmenu -b -i -p "Vypni bedničky a myš! Po vypnutí PC/NTB vytáhni PowerCube ze zásuvky!" -nf '$bg' -nb '$fg' -sb '$focus' -sf '$fg' -fn 'monospace:size=10' && systemctl poweroff, mode "default"
-    bindsym s exec --no-startup-id lock_system && systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id lock_system && systemctl hibernate, mode "default"
+    bindsym s exec --no-startup-id systemctl poweroff, mode "default"
+    bindsym u exec --no-startup-id system-lock && systemctl suspend, mode "default"
+    bindsym h exec --no-startup-id system-lock && systemctl hibernate, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
-
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -264,14 +255,13 @@ mode "$mode_power" {
 bindsym Control+Mod1+Delete mode "$mode_power"
 
 # Screenshot controls
-set $mode_print Get screenshot fullscreen (f), windows (w), delay fullscreen (d), delay window (c)
+set $mode_print Get screenshot (f)ullscreen, (w)indows, (d)elay fullscreen, d(e)lay window
 mode "$mode_print" {
     # binding for get screenshot
     bindsym f exec scrot '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot taken", mode "default"
     bindsym w exec scrot -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot for window taken", mode "default"
     bindsym d exec scrot -d 5 '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot taken", mode "default"
-    bindsym c exec scrot -d 5 -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot for window taken", mode "default"
-
+    bindsym e exec scrot -d 5 -u '%Y-%m-%d-%H%M%S_$wx$h.png' -e 'mv $f ~/Pictures/Screenshot/' && notify-send "Scrot" "Screenshot for window taken", mode "default"
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
@@ -279,39 +269,18 @@ mode "$mode_print" {
 bindsym Print mode "$mode_print"
 
 # Display controls
-set $mode_display Change display to eDP (e), dual-left (l), dual-top (t), dual-right (r), DP (d), manual (m)
+set $mode_display Change display to (l)aptop screen only, (d)uplicate, (e)xtend, (s)econd screen only
 mode "$mode_display" {
     # binding for get screenshot
-    bindsym e exec xrandr --output eDP1 --mode 1920x1080 --output DP1 --off, mode "default"
-    bindsym l exec xrandr --output eDP1 --mode 1920x1080 --right-of DP1, mode "default"
-    bindsym t exec xrandr --output eDP1 --mode 1920x1080 --auto --pos 0x1080 --output DP1 --mode 1920x1080 --auto --pos 0x0, mode "default"
-    bindsym r exec xrandr --output eDP1 --mode 1920x1080 --left-of DP1, mode "default"
-    bindsym d exec xrandr --output eDP1 --off --output DP1 --mode 1920x1080, mode "default"
-    bindsym m exec arandr, mode "default"
-
+    bindsym l exec displays-rearrange -l, mode "default"
+    bindsym d exec displays-rearrange -d, mode "default"
+    bindsym e exec displays-rearrange -e, mode "default"
+    bindsym s exec displays-rearrange -s, mode "default"
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+p mode "$mode_display"
-
-# Status notification
-set $mode_notify Now playing (m), IP (i), uptime (u), pomodoro (p)
-mode "$mode_notify" {
-    # now playing (mpc)
-    bindsym m exec notify-send "Now Playing ♫" "$(mpc current)", mode "default"
-    # my IP
-    bindsym i exec notify-send "My IP" "$(hostname -I | cut -d' ' -f1)", mode "default"
-    # uptime
-    bindsym u exec notify-send "Uptime" "$(uptime -p)", mode "default"
-    # Pomodoro status
-    bindsym p exec pomodoro status, mode "default"
-
-    # back to normal: Enter or Escape
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-bindsym $mod+n mode "$mode_notify"
 
 # ncmpcpp (mpd client)
 bindsym $mod+m exec urxvt -name ncmpcpp -e ncmpcpp
@@ -343,9 +312,11 @@ bindsym XF86Calculator exec urxvt -name calc -e calc
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% # increase sound volume
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% # decrease sound volume
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle # mute sound toggle
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle # mute microphone toggle
 bindsym $mod+KP_Add exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym $mod+KP_Subtract exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym $mod+KP_Multiply exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $mod+i exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 # window colors
 # class                 border  bground text    indicator child_border
@@ -359,7 +330,7 @@ client.background               $fg
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-    font pango:monospace,FontAwesome 10
+    font pango:DejaVu Sans Mono, Font Awesome 6 Free, Font Awesome 6 Brands 10
     status_command i3status
     position bottom
     strip_workspace_numbers no
@@ -378,8 +349,10 @@ bar {
     }
 }
 
+exec --no-startup-id displays-rearrange
 exec --no-startup-id xmodmap ~/.Xmodmap # swap keys {Menu, Super_L}
-exec --no-startup-id set_background
+exec --no-startup-id background-set
+exec --no-startup-id health-notify
 exec --no-startup-id urxvtd -q # decrease the resources usage
 exec --no-startup-id numlockx on
 exec --no-startup-id dunst -lb "$fg" -nb "$fg" -cb "$fg" -lf "$bg" -nf "$bg" -cf "$red" -lfr "$fg" -nfr "$fg" -cfr "$fg"

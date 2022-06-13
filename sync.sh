@@ -5,23 +5,38 @@ set -o pipefail
 set -o nounset
 # set -o xtrace
 
-FILES_FOR_SYNC="files"
+DOTFILES_FOR_SYNC="dotfiles-list"
+ROOTFILES_FOR_SYNC="rootfiles-list"
 
 install_files() {
     echo -e "\e[1;35;40mINSTALL DOTFILES\e[0m"
 
-    if [ -f "$FILES_FOR_SYNC" ]; then
-        rsync -ahrv --delete --files-from=$FILES_FOR_SYNC \
+    if [ -f "$DOTFILES_FOR_SYNC" ]; then
+        rsync -ahrv --delete --files-from=$DOTFILES_FOR_SYNC \
             $PWD/dotfiles/ /home/$USER/
+    fi
+
+    echo -e "\e[1;35;40mINSTALL ROOT FILES\e[0m"
+
+    if [ -f "$DOTFILES_FOR_SYNC" ]; then
+        sudo rsync -ahrv --files-from=$ROOTFILES_FOR_SYNC \
+            $PWD/root/ /
     fi
 }
 
 update_files() {
     echo -e "\e[1;35;40mUPDATE DOTFILES\e[0m"
 
-    if [ -f "$FILES_FOR_SYNC" ]; then
-        rsync -ahrv --delete --files-from=$FILES_FOR_SYNC \
+    if [ -f "$ROOTFILES_FOR_SYNC" ]; then
+        rsync -ahrv --delete --files-from=$DOTFILES_FOR_SYNC \
             /home/$USER/ $PWD/dotfiles/
+    fi
+
+    echo -e "\e[1;35;40mINSTALL ROOT FILES\e[0m"
+
+    if [ -f "$ROOTFILES_FOR_SYNC" ]; then
+        rsync -ahrv --delete --files-from=$ROOTFILES_FOR_SYNC \
+            / $PWD/root/
     fi
 }
 

@@ -1,0 +1,19 @@
+ACTION=="change", KERNEL=="BAT[0-9]", \
+SUBSYSTEM=="power_supply", \
+ATTR{status}=="Discharging", \
+ATTR{capacity}=="[0-9]", \
+RUN+="/usr/bin/battery-notify -c $attr{capacity}"
+
+ACTION=="change", KERNEL=="BAT[0-9]", \
+SUBSYSTEM=="power_supply", \
+ATTR{status}=="Discharging", \
+ATTR{capacity}=="1[0-9]", \
+RUN+="/usr/bin/battery-notify -l $attr{capacity}"
+
+SUBSYSTEM=="power_supply", ACTION=="change", \
+ENV{POWER_SUPPLY_ONLINE}=="0", ENV{POWER_SUPPLY_TYPE}=="Mains" \
+ENV{POWER}="off", RUN+="/usr/bin/battery-notify -u"
+
+SUBSYSTEM=="power_supply", ACTION=="change", \
+ENV{POWER_SUPPLY_ONLINE}=="1", ENV{POWER_SUPPLY_TYPE}=="Mains" \
+ENV{POWER}="on", RUN+="/usr/bin/battery-notify -p"
